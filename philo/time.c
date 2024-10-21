@@ -6,7 +6,7 @@
 /*   By: gonische <gonische@student.42wolfsburg.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/19 23:20:18 by gonische          #+#    #+#             */
-/*   Updated: 2024/10/21 12:45:09 by gonische         ###   ########.fr       */
+/*   Updated: 2024/10/21 17:56:13 by gonische         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,4 +35,13 @@ void	init_time(t_time *time)
 	time->tstate = 0;
 	time->tsince_last_meal = 0;
 	time->tlast = get_time();
+}
+
+// sps Fedya za etu function
+void	thread_sleep(uint64_t ms)
+{
+	uint64_t	start;
+
+	start = get_time();
+	while ((get_time() - start) <= ms);
 }

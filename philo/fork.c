@@ -6,7 +6,7 @@
 /*   By: gonische <gonische@student.42wolfsburg.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/20 18:22:36 by gonische          #+#    #+#             */
-/*   Updated: 2024/10/21 14:40:39 by gonische         ###   ########.fr       */
+/*   Updated: 2024/10/21 17:49:21 by gonische         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,6 @@ bool	init_forks(t_fork forks[], size_t arr_size)
 	size_t	i;
 
 	i = 0;
-
 	while (i < arr_size)
 	{
 		forks[i].is_taken = false;

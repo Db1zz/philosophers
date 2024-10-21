@@ -52,11 +52,10 @@ bool	create_philosophers(t_philosopher philos[], t_fork forks[],
 		philos[i].left_fork = &forks[i];
 		philos[i].right_fork = &forks[(i + 1) % size];
 		philos[i].state = E_STATE_THINKING;
-		init_time(&philos[i].timers);
 		philos[i].eat_times = 0;
 		philos[i].print_mutex = &print_mutex;
 		philos[i].args = args;
-		pthread_create(&philos[i].thread, NULL, philosopher_routine,&philos[i]);
+		pthread_create(&philos[i].thread, NULL, philosopher_routine, &philos[i]);
 		i++;
 	}
 	wait_philosophers_to_finish(philos, size);
@@ -69,12 +68,12 @@ void	*philosopher_routine(void *philosopher)
 	t_philosopher	*philo;
 
 	philo = (t_philosopher *)philosopher;
+	init_time(&philo->timers);
 	while (!(*philo->is_died))
 	{
 		print_state(philo);
 		while (!is_died(philo) && check_update_state(philo))
 			update_time(&philo->timers);
-		philo->timers.tstate = 0;
 	}
 	if (philo->state == E_STATE_DIED)
 		print_state(philo);

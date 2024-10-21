@@ -6,7 +6,7 @@
 /*   By: gonische <gonische@student.42wolfsburg.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/13 15:17:40 by gonische          #+#    #+#             */
-/*   Updated: 2024/10/21 15:20:41 by gonische         ###   ########.fr       */
+/*   Updated: 2024/10/21 17:21:53 by gonische         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@
 #include <sys/time.h>
 #include <pthread.h>
 #include <unistd.h>
+#include <stdint.h>
 
 typedef enum e_state
 {
@@ -85,7 +86,7 @@ bool	acquire_release_forks(t_philosopher *philo, bool to_acquire);
 void	init_time(t_time *time);
 void	update_time(t_time *time);
 
-// init functions
+// Init functions
 bool	init_forks(t_fork forks[], size_t arr_size);
 
 // Philosopher functions
@@ -110,6 +111,6 @@ int		ft_atoi(const char *str);
 #endif // SLEEP_INTERVAL
 
 uint64_t	get_time(void);
-void		thread_sleep(size_t milliseconds);
+void		thread_sleep(uint64_t ms);
 
 #endif // PHILOSOPHERS_H

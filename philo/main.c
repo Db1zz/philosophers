@@ -6,7 +6,7 @@
 /*   By: gonische <gonische@student.42wolfsburg.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/18 14:51:20 by gonische          #+#    #+#             */
-/*   Updated: 2024/10/20 19:37:03 by gonische         ###   ########.fr       */
+/*   Updated: 2024/10/21 17:41:15 by gonische         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,4 +33,3 @@ int main(int argc, char **argv)
 	run_philosophers(&args);
 	return (EXIT_SUCCESS);
 }
-
