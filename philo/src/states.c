@@ -6,7 +6,7 @@
 /*   By: gonische <gonische@student.42wolfsburg.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/18 13:01:04 by gonische          #+#    #+#             */
-/*   Updated: 2024/10/22 14:59:33 by gonische         ###   ########.fr       */
+/*   Updated: 2024/10/22 17:27:18 by gonische         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,6 @@ void	print_state(t_philosopher *philo)
 		return ;
 	update_time(&philo->timestamp);
 	t = philo->timestamp.time;
-	pthread_mutex_lock(&philo->pdata->print_mutex);
 	if (philo->state == E_STATE_EATING)
 	{
 		printf("T[%lu] philo[%zu] has taken a fork\n", t, philo->id);
@@ -78,5 +77,4 @@ void	print_state(t_philosopher *philo)
 		printf("T[%lu] philo[%zu] is thinking (＃＞＜)\n", t, philo->id);
 	if (philo->state == E_STATE_DIED)
 		printf("T[%lu] philo[%zu] is died ٩(× ×)۶\n", t, philo->id);
-	pthread_mutex_unlock(&philo->pdata->print_mutex);
 }

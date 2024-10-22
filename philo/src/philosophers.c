@@ -72,7 +72,9 @@ void	*philosopher_routine(void *philosopher)
 	init_time(&philo->timestamp);
 	while (!philo->pdata->exit_status && !is_finished_eating(philo))
 	{
+		pthread_mutex_lock(&philo->pdata->global_mutex);
 		print_state(philo);
+		pthread_mutex_unlock(&philo->pdata->global_mutex);
 		while (check_update_state(philo))
 		{
 			if (is_died(philo))
