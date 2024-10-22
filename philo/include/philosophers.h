@@ -6,7 +6,7 @@
 /*   By: gonische <gonische@student.42wolfsburg.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/13 15:17:40 by gonische          #+#    #+#             */
-/*   Updated: 2024/10/22 15:00:15 by gonische         ###   ########.fr       */
+/*   Updated: 2024/10/22 17:32:47 by gonische         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,6 @@ typedef struct t_process
 {
 	t_args			args;
 	bool			exit_status;
-	pthread_mutex_t	print_mutex;
 	pthread_mutex_t	global_mutex;
 }	t_process;
 

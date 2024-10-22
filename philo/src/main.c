@@ -6,7 +6,7 @@
 /*   By: gonische <gonische@student.42wolfsburg.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/18 14:51:20 by gonische          #+#    #+#             */
-/*   Updated: 2024/10/22 14:48:35 by gonische         ###   ########.fr       */
+/*   Updated: 2024/10/22 17:32:30 by gonische         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,18 +37,6 @@ static void	run_philosophers(t_process *pdata)
 	wait_philosophers_to_finish(philosophers, size);
 }
 
-static void	init_mutexes(t_process *pdata)
-{
-	pthread_mutex_init(&pdata->global_mutex, NULL);
-	pthread_mutex_init(&pdata->print_mutex, NULL);
-}
-
-static void	destroy_mutexes(t_process *pdata)
-{
-	pthread_mutex_destroy(&pdata->global_mutex);
-	pthread_mutex_destroy(&pdata->print_mutex);
-}
-
 int	main(int argc, char **argv)
 {
 	t_process	pdata;
@@ -56,8 +44,8 @@ int	main(int argc, char **argv)
 	if (!init_args(argc, argv, &pdata.args))
 		return (EXIT_FAILURE);
 	pdata.exit_status = false;
-	init_mutexes(&pdata);
+	pthread_mutex_init(&pdata.global_mutex, NULL);
 	run_philosophers(&pdata);
-	destroy_mutexes(&pdata);
+	pthread_mutex_destroy(&pdata.global_mutex);
 	return (EXIT_SUCCESS);
 }
