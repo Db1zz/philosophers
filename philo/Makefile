@@ -16,8 +16,11 @@ OBJS = $(SRCS:.c=.o)
 
 all: $(NAME)
 
-$(NAME): $(SRCS)
-	$(CC) $(FLAGS) $(SRCS) $(INCLUDE) -o $(NAME)
+$(NAME): $(OBJS)
+	$(CC) $(FLAGS) $(OBJS) -o $(NAME)
+
+%.o: %.c
+	$(CC) $(CFLAGS) $(INCLUDE) -c $< -o $@
 
 clean:
 	rm -f $(OBJS)
