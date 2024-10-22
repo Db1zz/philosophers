@@ -6,7 +6,7 @@
 /*   By: gonische <gonische@student.42wolfsburg.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/13 15:17:40 by gonische          #+#    #+#             */
-/*   Updated: 2024/10/22 14:48:08 by gonische         ###   ########.fr       */
+/*   Updated: 2024/10/22 15:00:15 by gonische         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,9 +45,9 @@ typedef struct t_fork
 typedef struct t_args
 {
 	int			number_of_philosophers;
-	uint64_t	time_to_die;
-	uint64_t	time_to_eat;
-	uint64_t	time_to_sleep;
+	int64_t		time_to_die;
+	int64_t		time_to_eat;
+	int64_t		time_to_sleep;
 	int			num_eat_cycles;
 	size_t		arguments_given;
 }	t_args;
@@ -102,6 +102,6 @@ bool	check_update_state(t_philosopher *philo);
 
 // Utility functions
 int		ft_atoi(const char *str);
-bool	thread_sleep_routine(uint64_t ms, bool (*f)(t_philosopher *),
+bool	thread_sleep_routine(int64_t ms, bool (*f)(t_philosopher *),
 			void *f_d);
 #endif // PHILOSOPHERS_H

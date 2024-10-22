@@ -6,7 +6,7 @@
 /*   By: gonische <gonische@student.42wolfsburg.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/18 13:01:04 by gonische          #+#    #+#             */
-/*   Updated: 2024/10/22 14:43:42 by gonische         ###   ########.fr       */
+/*   Updated: 2024/10/22 14:59:33 by gonische         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,7 @@ bool	check_update_state(t_philosopher *philo)
 
 void	print_state(t_philosopher *philo)
 {
-	uint64_t	t;
+	int64_t	t;
 
 	if (philo->pdata->exit_status)
 		return ;

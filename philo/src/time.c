@@ -6,13 +6,13 @@
 /*   By: gonische <gonische@student.42wolfsburg.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/19 23:20:18 by gonische          #+#    #+#             */
-/*   Updated: 2024/10/22 14:41:01 by gonische         ###   ########.fr       */
+/*   Updated: 2024/10/22 14:59:22 by gonische         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philosophers.h"
 
-uint64_t	get_time(void)
+int64_t	get_time(void)
 {
 	struct timeval	time;
 
@@ -31,7 +31,7 @@ void	init_time(t_time *time)
 
 void	update_time(t_time *time)
 {
-	uint64_t	time_curr;
+	int64_t	time_curr;
 
 	if (!time)
 		return ;

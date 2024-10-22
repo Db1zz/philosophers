@@ -6,7 +6,7 @@
 /*   By: gonische <gonische@student.42wolfsburg.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/20 19:17:32 by gonische          #+#    #+#             */
-/*   Updated: 2024/10/22 14:42:48 by gonische         ###   ########.fr       */
+/*   Updated: 2024/10/22 15:01:02 by gonische         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ bool	check_arguments(const t_args *args)
 		|| args->time_to_sleep < 60)
 	{
 		printf("Error: time_to_die or time_to_eat or time_to_sleep");
-		printf(" values cannot be lower than 60ms.\n");
+		printf(" values cannot be lower than 60ms and greater int64_t.\n");
 		return (false);
 	}
 	else if (args->num_eat_cycles < 0)
