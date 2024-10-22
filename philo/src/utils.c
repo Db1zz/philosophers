@@ -1,23 +1,37 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   time.c                                             :+:      :+:    :+:   */
+/*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: gonische <gonische@student.42wolfsburg.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/10/19 23:20:18 by gonische          #+#    #+#             */
-/*   Updated: 2024/10/22 11:50:53 by gonische         ###   ########.fr       */
+/*   Created: 2024/10/13 15:00:59 by gonische          #+#    #+#             */
+/*   Updated: 2024/10/22 12:14:32 by gonische         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philosophers.h"
 
-uint64_t	get_time(void)
+int	ft_atoi(const char *str)
 {
-	struct timeval time;
+	int	result;
+	int	i;
+	int	neg;
 
-	gettimeofday(&time, NULL);
-	return (time.tv_sec * 1000LL + time.tv_usec / 1000);
+	result = 0;
+	i = 0;
+	neg = 1;
+	while (((str[i] >= 9 && str[i] <= 13) || str[i] == 32))
+		i++;
+	if (str[i] == '+' || str[i] == '-')
+	{
+		if (str[i] == '-')
+			neg = -1;
+		i++;
+	}
+	while (str[i] && (str[i] >= '0' && str[i] <= '9'))
+		result = (result * 10) + (str[i++] - 48);
+	return (result * neg);
 }
 
 bool	thread_sleep_routine(uint64_t ms, bool (*f)(t_philosopher *), void *f_d)
@@ -32,25 +46,4 @@ bool	thread_sleep_routine(uint64_t ms, bool (*f)(t_philosopher *), void *f_d)
 		usleep(100);
 	}
 	return (false);
-}
-
-void	init_time(t_time *time)
-{
-	if (!time)
-		return ;
-	time->time = 0;
-	time->pervious = get_time();
-	time->diff = 0;
-}
-
-void	update_time(t_time *time)
-{
-	uint64_t	time_curr;
-
-	if (!time)
-		return ;
-	time_curr = get_time();
-	time->diff = time_curr - time->pervious;
-	time->time += time->diff;
-	time->pervious = time_curr;
 }

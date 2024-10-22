@@ -6,7 +6,7 @@
 /*   By: gonische <gonische@student.42wolfsburg.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/18 13:01:04 by gonische          #+#    #+#             */
-/*   Updated: 2024/10/21 23:50:00 by gonische         ###   ########.fr       */
+/*   Updated: 2024/10/22 14:43:42 by gonische         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,8 @@ bool	is_state_eating(t_philosopher *philo)
 		return (false);
 	update_time(&philo->meal_time);
 	philo->meal_time.time = 0;
-	thread_sleep_routine(philo->args->time_to_eat, NULL, NULL);
+	philo->meal_counter++;
+	thread_sleep_routine(philo->pdata->args.time_to_eat, NULL, NULL);
 	acquire_release_forks(philo, false);
 	philo->state = E_STATE_SLEEPING;
 	return (false);
@@ -38,7 +39,7 @@ bool	is_state_sleeping(t_philosopher *philo)
 {
 	if (philo->state != E_STATE_SLEEPING)
 		return (false);
-	if (thread_sleep_routine(philo->args->time_to_sleep, is_died, philo))
+	if (thread_sleep_routine(philo->pdata->args.time_to_sleep, is_died, philo))
 		return (false);
 	philo->state = E_STATE_THINKING;
 	return (false);
@@ -46,34 +47,36 @@ bool	is_state_sleeping(t_philosopher *philo)
 
 bool	check_update_state(t_philosopher *philo)
 {
-	static const t_state_function_p functions[] = {
+	static const t_state_function_p	functions[] = {
 		is_state_thinking,
 		is_state_eating,
 		is_state_sleeping
 	};
 
-	if (philo->state >= E_STATE_COUNT)
+	if (philo->state >= E_STATE_DIED)
 		return (false);
 	return (functions[(int)philo->state](philo));
 }
 
 void	print_state(t_philosopher *philo)
 {
-	uint64_t	timestamp;
+	uint64_t	t;
 
+	if (philo->pdata->exit_status)
+		return ;
 	update_time(&philo->timestamp);
-	timestamp = philo->timestamp.time;
-	pthread_mutex_lock(philo->print_mutex);
+	t = philo->timestamp.time;
+	pthread_mutex_lock(&philo->pdata->print_mutex);
 	if (philo->state == E_STATE_EATING)
 	{
-		printf("T[%llu] philosopher[%zu] has taken a fork\n", timestamp, philo->id);
-		printf("T[%llu] philosopher[%zu] is eating\n", timestamp, philo->id);
+		printf("T[%lu] philo[%zu] has taken a fork\n", t, philo->id);
+		printf("T[%lu] philo[%zu] is eating (´ᵔ⤙ᵔ`)\n", t, philo->id);
 	}
 	else if (philo->state == E_STATE_SLEEPING)
-		printf("T[%llu] philosopher[%zu] is sleeping\n", timestamp, philo->id);
+		printf("T[%lu] philo[%zu] is sleeping (∪｡∪)｡｡｡zzZ\n", t, philo->id);
 	else if (philo->state == E_STATE_THINKING)
-		printf("T[%llu] philosopher[%zu] is thinking\n", timestamp, philo->id);
+		printf("T[%lu] philo[%zu] is thinking (＃＞＜)\n", t, philo->id);
 	if (philo->state == E_STATE_DIED)
-		printf("T[%llu] philosopher[%zu] is died :(\n", timestamp, philo->id);
-	pthread_mutex_unlock(philo->print_mutex);
+		printf("T[%lu] philo[%zu] is died ٩(× ×)۶\n", t, philo->id);
+	pthread_mutex_unlock(&philo->pdata->print_mutex);
 }

@@ -1,22 +1,23 @@
 # Project settings
 NAME = philo
 CC = cc
-FLAGS = -Wall -Wextra #-Werror
+FLAGS = -Wall -Wextra -Werror
+INCLUDE = -I include
 
-SRCS =	philosophers.c	\
-		fork.c			\
-		input_handler.c	\
-		utils.c			\
-		states.c		\
-		time.c			\
-		main.c
+SRCS =	src/philosophers.c	\
+		src/fork.c			\
+		src/input_handler.c	\
+		src/utils.c			\
+		src/states.c		\
+		src/time.c			\
+		src/main.c
 
 OBJS = $(SRCS:.c=.o)
 
 all: $(NAME)
 
 $(NAME): $(SRCS)
-	$(CC) $(FLAGS) $(SRCS) -o $(NAME)
+	$(CC) $(FLAGS) $(SRCS) $(INCLUDE) -o $(NAME)
 
 clean:
 	rm -f $(OBJS)

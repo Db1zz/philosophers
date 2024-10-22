@@ -6,20 +6,25 @@
 /*   By: gonische <gonische@student.42wolfsburg.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/13 15:17:40 by gonische          #+#    #+#             */
-/*   Updated: 2024/10/21 23:50:46 by gonische         ###   ########.fr       */
+/*   Updated: 2024/10/22 14:48:08 by gonische         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef PHILOSOPHERS_H
-#define PHILOSOPHERS_H
+# define PHILOSOPHERS_H
 
-#include <stdio.h>
-#include <stdbool.h>
-#include <stdlib.h>
-#include <sys/time.h>
-#include <pthread.h>
-#include <unistd.h>
-#include <stdint.h>
+# include "time.h"
+
+# include <stdio.h>
+# include <stdbool.h>
+# include <stdlib.h>
+# include <sys/time.h>
+# include <pthread.h>
+# include <unistd.h>
+
+# define MAX_ARR_SIZE 200
+# define MIN_ARGS_AMOUNT 5
+# define MAX_ARGS_AMOUNT 6
 
 typedef enum e_state
 {
@@ -28,13 +33,13 @@ typedef enum e_state
 	E_STATE_SLEEPING,
 	E_STATE_DIED,
 	E_STATE_COUNT
-}	e_state;
+}	t_state;
 
 typedef struct t_fork
 {
-	pthread_mutex_t mutex;
+	pthread_mutex_t	mutex;
 	bool			is_taken;
-	int				was_used_by;
+	size_t			was_used_by;
 }	t_fork;
 
 typedef struct t_args
@@ -43,34 +48,32 @@ typedef struct t_args
 	uint64_t	time_to_die;
 	uint64_t	time_to_eat;
 	uint64_t	time_to_sleep;
-	int			number_of_times_each_philosopher_must_eat;
+	int			num_eat_cycles;
 	size_t		arguments_given;
 }	t_args;
 
-typedef struct t_time
+typedef struct t_process
 {
-	uint64_t	time;
-	uint64_t	pervious;
-	uint64_t	diff;
-}	t_time;
+	t_args			args;
+	bool			exit_status;
+	pthread_mutex_t	print_mutex;
+	pthread_mutex_t	global_mutex;
+}	t_process;
 
 typedef struct t_philosopher
 {
 	size_t				id;
-	bool				*is_died;
-	pthread_t			*thread;
+	pthread_t			thread;
 	t_fork				*left_fork;
 	t_fork				*right_fork;
-	e_state				state;
-	size_t				eat_times;
+	t_state				state;
+	int					meal_counter;
 	t_time				meal_time;
 	t_time				timestamp;
-	pthread_mutex_t		*print_mutex;
-	const t_args		*args;
+	t_process			*pdata;
 }	t_philosopher;
 
-#define STATE_ARRAY_MAX_INDEX 2
-typedef bool (*t_state_function_p)(t_philosopher *);
+typedef bool	(*t_state_function_p)(t_philosopher *);
 
 // Input handlers
 bool	check_arguments(const t_args *args);
@@ -87,8 +90,7 @@ bool	init_forks(t_fork forks[], size_t arr_size);
 // Philosopher functions
 void	*philosopher_routine(void *philosopher);
 bool	create_philosophers(t_philosopher philos[], t_fork forks[],
-							size_t size, const t_args *args);
-void	wait_philosophers_to_finish(t_philosopher philo[], size_t size);
+			size_t size, t_process *data);
 bool	is_died(t_philosopher *philo);
 
 // State related functions
@@ -100,13 +102,6 @@ bool	check_update_state(t_philosopher *philo);
 
 // Utility functions
 int		ft_atoi(const char *str);
-
-#ifndef SLEEP_INTERVAL
-#define SLEEP_INTERVAL 100
-#endif // SLEEP_INTERVAL
-
-uint64_t	get_time(void);
-void		init_time(t_time *time);
-void		update_time(t_time *time);
-bool	thread_sleep_routine(uint64_t ms, bool (*f)(t_philosopher *), void *f_d);
+bool	thread_sleep_routine(uint64_t ms, bool (*f)(t_philosopher *),
+			void *f_d);
 #endif // PHILOSOPHERS_H
