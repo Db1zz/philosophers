@@ -6,7 +6,7 @@
 /*   By: gonische <gonische@student.42wolfsburg.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/18 14:51:20 by gonische          #+#    #+#             */
-/*   Updated: 2024/10/21 17:41:15 by gonische         ###   ########.fr       */
+/*   Updated: 2024/10/21 23:46:23 by gonische         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,5 +31,13 @@ int main(int argc, char **argv)
 	if (!init_args(argc, argv, &args))
 		return (EXIT_FAILURE);
 	run_philosophers(&args);
+	// t_time time;
+	// init_time(&time);
+	// while (true)
+	// {
+	// 	printf("time:%d\n", time.time);
+	// 	thread_sleep_routine(200, NULL, NULL);
+	// 	update_time(&time);
+	// }
 	return (EXIT_SUCCESS);
 }

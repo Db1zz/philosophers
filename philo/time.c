@@ -6,7 +6,7 @@
 /*   By: gonische <gonische@student.42wolfsburg.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/19 23:20:18 by gonische          #+#    #+#             */
-/*   Updated: 2024/10/21 17:56:13 by gonische         ###   ########.fr       */
+/*   Updated: 2024/10/22 00:10:41 by gonische         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,28 +20,36 @@ uint64_t	get_time(void)
 	return (time.tv_sec * 1000LL + time.tv_usec / 1000);
 }
 
-void	update_time(t_time *time)
-{
-	time->tdiff = get_time() - time->tlast;
-	time->timestamp += time->tdiff;
-	time->tstate += time->tdiff;
-	time->tsince_last_meal += time->tdiff;
-	time->tlast += time->tdiff;
-}
-
-void	init_time(t_time *time)
-{
-	time->timestamp = 0;
-	time->tstate = 0;
-	time->tsince_last_meal = 0;
-	time->tlast = get_time();
-}
-
-// sps Fedya za etu function
-void	thread_sleep(uint64_t ms)
+bool	thread_sleep_routine(uint64_t ms, bool (*f)(t_philosopher *), void *f_d)
 {
 	uint64_t	start;
 
 	start = get_time();
-	while ((get_time() - start) <= ms);
+	while ((get_time() - start) < ms)
+	{
+		if (f != NULL && f(f_d))
+			return (true);
+	}
+	return (false);
+}
+
+void	init_time(t_time *time)
+{
+	if (!time)
+		return ;
+	time->time = 0;
+	time->pervious = get_time();
+	time->diff = 0;
+}
+
+void	update_time(t_time *time)
+{
+	uint64_t	time_curr;
+
+	if (!time)
+		return ;
+	time_curr = get_time();
+	time->diff = time_curr - time->pervious;
+	time->time += time->diff;
+	time->pervious = time_curr;
 }

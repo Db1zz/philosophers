@@ -6,7 +6,7 @@
 /*   By: gonische <gonische@student.42wolfsburg.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/18 13:01:04 by gonische          #+#    #+#             */
-/*   Updated: 2024/10/21 18:26:58 by gonische         ###   ########.fr       */
+/*   Updated: 2024/10/21 23:50:00 by gonische         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,10 +26,10 @@ bool	is_state_eating(t_philosopher *philo)
 {
 	if (philo->state != E_STATE_EATING)
 		return (false);
-	thread_sleep(philo->args->time_to_eat);
+	update_time(&philo->meal_time);
+	philo->meal_time.time = 0;
+	thread_sleep_routine(philo->args->time_to_eat, NULL, NULL);
 	acquire_release_forks(philo, false);
-	update_time(&philo->timers);
-	philo->timers.tsince_last_meal = 0;
 	philo->state = E_STATE_SLEEPING;
 	return (false);
 }
@@ -38,9 +38,8 @@ bool	is_state_sleeping(t_philosopher *philo)
 {
 	if (philo->state != E_STATE_SLEEPING)
 		return (false);
-	thread_sleep(philo->args->time_to_sleep);
-	if (philo->timers.tstate < philo->args->time_to_sleep)
-		return (true);
+	if (thread_sleep_routine(philo->args->time_to_sleep, is_died, philo))
+		return (false);
 	philo->state = E_STATE_THINKING;
 	return (false);
 }
@@ -62,7 +61,8 @@ void	print_state(t_philosopher *philo)
 {
 	uint64_t	timestamp;
 
-	timestamp = philo->timers.timestamp;
+	update_time(&philo->timestamp);
+	timestamp = philo->timestamp.time;
 	pthread_mutex_lock(philo->print_mutex);
 	if (philo->state == E_STATE_EATING)
 	{

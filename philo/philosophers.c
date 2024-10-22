@@ -15,7 +15,8 @@
 
 bool	is_died(t_philosopher *philo)
 {
-	if (philo->timers.tsince_last_meal >= philo->args->time_to_die)
+	update_time(&philo->meal_time);
+	if (philo->meal_time.time >= philo->args->time_to_die)
 	{
 		philo->state = E_STATE_DIED;
 		*philo->is_died = true;
@@ -68,12 +69,12 @@ void	*philosopher_routine(void *philosopher)
 	t_philosopher	*philo;
 
 	philo = (t_philosopher *)philosopher;
-	init_time(&philo->timers);
+	init_time(&philo->meal_time);
+	init_time(&philo->timestamp);
 	while (!(*philo->is_died))
 	{
 		print_state(philo);
-		while (!is_died(philo) && check_update_state(philo))
-			update_time(&philo->timers);
+		while (check_update_state(philo) && !is_died(philo));
 	}
 	if (philo->state == E_STATE_DIED)
 		print_state(philo);

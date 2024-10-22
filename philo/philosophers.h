@@ -6,7 +6,7 @@
 /*   By: gonische <gonische@student.42wolfsburg.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/13 15:17:40 by gonische          #+#    #+#             */
-/*   Updated: 2024/10/21 17:21:53 by gonische         ###   ########.fr       */
+/*   Updated: 2024/10/21 23:50:46 by gonische         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,15 +37,6 @@ typedef struct t_fork
 	int				was_used_by;
 }	t_fork;
 
-typedef struct t_time
-{
-	uint64_t	timestamp;
-	uint64_t	tstate;
-	uint64_t	tlast;
-	uint64_t	tdiff;
-	uint64_t	tsince_last_meal;
-}	t_time;
-
 typedef struct t_args
 {
 	int			number_of_philosophers;
@@ -56,6 +47,13 @@ typedef struct t_args
 	size_t		arguments_given;
 }	t_args;
 
+typedef struct t_time
+{
+	uint64_t	time;
+	uint64_t	pervious;
+	uint64_t	diff;
+}	t_time;
+
 typedef struct t_philosopher
 {
 	size_t				id;
@@ -64,8 +62,9 @@ typedef struct t_philosopher
 	t_fork				*left_fork;
 	t_fork				*right_fork;
 	e_state				state;
-	t_time				timers;
 	size_t				eat_times;
+	t_time				meal_time;
+	t_time				timestamp;
 	pthread_mutex_t		*print_mutex;
 	const t_args		*args;
 }	t_philosopher;
@@ -81,10 +80,6 @@ bool	init_args(int argc, char **argv, t_args *args);
 bool	init_forks(t_fork forks[], size_t arr_size);
 bool	set_fork_status(t_philosopher *philo, t_fork *fork, bool to_take);
 bool	acquire_release_forks(t_philosopher *philo, bool to_acquire);
-
-// time functions
-void	init_time(t_time *time);
-void	update_time(t_time *time);
 
 // Init functions
 bool	init_forks(t_fork forks[], size_t arr_size);
@@ -111,6 +106,7 @@ int		ft_atoi(const char *str);
 #endif // SLEEP_INTERVAL
 
 uint64_t	get_time(void);
-void		thread_sleep(uint64_t ms);
-
+void		init_time(t_time *time);
+void		update_time(t_time *time);
+bool	thread_sleep_routine(uint64_t ms, bool (*f)(t_philosopher *), void *f_d);
 #endif // PHILOSOPHERS_H
