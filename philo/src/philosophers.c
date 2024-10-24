@@ -28,10 +28,20 @@ bool	is_died(t_philosopher *philo)
 	return (philo->pdata->exit_status);
 }
 
-static bool	is_finished_eating(const t_philosopher *philo)
+static bool	is_philo_done_eating(const t_philosopher *philo)
 {
 	return (philo->pdata->args.arguments_given == MAX_ARGS_AMOUNT
 		&& philo->meal_counter == philo->pdata->args.num_eat_cycles);
+}
+
+static bool	check_exit_status(const t_philosopher *philo)
+{
+	bool	exit_status;
+
+	pthread_mutex_lock(&philo->pdata->global_mutex);
+	exit_status = philo->pdata->exit_status;
+	pthread_mutex_unlock(&philo->pdata->global_mutex);
+	return (exit_status);
 }
 
 bool	create_philosophers(t_philosopher philos[], t_fork forks[],
@@ -70,7 +80,7 @@ void	*philosopher_routine(void *philosopher)
 	philo = (t_philosopher *)philosopher;
 	init_time(&philo->meal_time);
 	init_time(&philo->timestamp);
-	while (!philo->pdata->exit_status && !is_finished_eating(philo))
+	while (!check_exit_status(philo) && !is_philo_done_eating(philo))
 	{
 		pthread_mutex_lock(&philo->pdata->global_mutex);
 		print_state(philo);

@@ -6,7 +6,7 @@
 /*   By: gonische <gonische@student.42wolfsburg.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/20 18:22:36 by gonische          #+#    #+#             */
-/*   Updated: 2024/10/21 17:49:21 by gonische         ###   ########.fr       */
+/*   Updated: 2024/10/24 08:33:04 by gonische         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,10 @@ bool	init_forks(t_fork forks[], size_t arr_size)
 	while (i < arr_size)
 	{
 		forks[i].is_taken = false;
-		forks[i].was_used_by = -1;
+		if ((i + 1) % 2 == 0)
+			forks[i].was_used_by = (i + 1) % arr_size;
+		else
+			forks[i].was_used_by = -1;
 		status = pthread_mutex_init(&forks[i].mutex, NULL);
 		if (status != 0)
 		{

@@ -6,7 +6,7 @@
 /*   By: gonische <gonische@student.42wolfsburg.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/18 13:01:04 by gonische          #+#    #+#             */
-/*   Updated: 2024/10/22 17:27:18 by gonische         ###   ########.fr       */
+/*   Updated: 2024/10/24 08:56:22 by gonische         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,6 +57,7 @@ bool	check_update_state(t_philosopher *philo)
 		return (false);
 	return (functions[(int)philo->state](philo));
 }
+
 
 void	print_state(t_philosopher *philo)
 {
