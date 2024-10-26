@@ -6,7 +6,7 @@
 /*   By: gonische <gonische@student.42wolfsburg.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/18 13:01:04 by gonische          #+#    #+#             */
-/*   Updated: 2024/10/24 08:59:12 by gonische         ###   ########.fr       */
+/*   Updated: 2024/10/25 15:32:28 by gonische         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,8 +16,7 @@ bool	is_state_thinking(t_philosopher *philo)
 {
 	if (philo->state != E_STATE_THINKING)
 		return (false);
-	if (!acquire_release_forks(philo, true))
-		return (true);
+	take_forks(philo);
 	philo->state = E_STATE_EATING;
 	return (false);
 }
@@ -30,7 +29,7 @@ bool	is_state_eating(t_philosopher *philo)
 	philo->meal_time.time = 0;
 	philo->meal_counter++;
 	thread_sleep_routine(philo->pdata->args.time_to_eat, NULL, NULL);
-	acquire_release_forks(philo, false);
+	put_forks(philo);
 	philo->state = E_STATE_SLEEPING;
 	return (false);
 }

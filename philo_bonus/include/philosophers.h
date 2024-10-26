@@ -6,7 +6,7 @@
 /*   By: gonische <gonische@student.42wolfsburg.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/13 15:17:40 by gonische          #+#    #+#             */
-/*   Updated: 2024/10/24 13:40:33 by gonische         ###   ########.fr       */
+/*   Updated: 2024/10/25 15:28:31 by gonische         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,15 +59,14 @@ typedef struct t_process
 {
 	t_args			args;
 	bool			exit_status;
-	t_sem_data		*global_sem;
+	t_sem_data		global_sem;
 	pid_t			pid[MAX_ARR_SIZE];
 }	t_process;
 
 typedef struct t_philosopher
 {
 	size_t				id;
-	pthread_t			thread;
-	sem_t				*forks_pull;
+	t_sem_data			*forks_pull;
 	t_state				state;
 	int					meal_counter;
 	t_time				meal_time;
@@ -84,11 +83,18 @@ bool	init_args(int argc, char **argv, t_args *args);
 // Semaphore wrappers
 bool	open_semaphore(t_sem_data *sem_p, char *sem_name, int sem_size);
 bool	close_semaphore(t_sem_data *sem_p);
+bool	init_semaphores(t_sem_data *forks_sem, size_t size,
+			t_sem_data *global_sem);
+void	destroy_semaphores(t_sem_data *forks_sem, t_sem_data *global_sem);
+
+// Forks
+void	take_forks(t_philosopher *philo);
+void	put_forks(t_philosopher *philo);
 
 // Philosopher functions
-void	*philosopher_routine(void *philosopher);
 void	init_philosopher(t_philosopher philos[], size_t size,
 			t_sem_data *forks_pull, t_process *data);
+void	philosopher_routine(t_philosopher *philo);
 bool	is_died(t_philosopher *philo);
 
 // State related functions

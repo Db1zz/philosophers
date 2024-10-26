@@ -6,7 +6,7 @@
 /*   By: gonische <gonische@student.42wolfsburg.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/24 12:03:24 by gonische          #+#    #+#             */
-/*   Updated: 2024/10/24 12:42:30 by gonische         ###   ########.fr       */
+/*   Updated: 2024/10/25 19:37:48 by gonische         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,7 @@ bool	close_semaphore(t_sem_data *sem_p)
 		printf("%s sem_close failed\n", msg_err_issuer);
 		return (false);
 	}
-	if (sem_unlink(sem_p->sem) != 0)
+	if (sem_unlink(sem_p->name) != 0)
 	{
 		printf("%s sem_unlink failed\n", msg_err_issuer);
 		return (false);
@@ -63,4 +63,21 @@ bool	close_semaphore(t_sem_data *sem_p)
 	return (true);
 }
 
+bool	init_semaphores(t_sem_data *forks_sem, size_t size, 
+						t_sem_data *global_sem)
+{
+	if (!open_semaphore(forks_sem, "_philo_forks_pull_sem_", 1))
+		return (false);
+	if (!open_semaphore(global_sem, "_philo_global_sem_", 1))
+	{
+		close_semaphore(forks_sem);
+		return (false);
+	}
+	return (true);
+}
 
+void	destroy_semaphores(t_sem_data *forks_sem, t_sem_data *global_sem)
+{
+	close_semaphore(forks_sem);
+	close_semaphore(global_sem);
+}
