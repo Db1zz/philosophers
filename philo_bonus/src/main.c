@@ -6,16 +6,16 @@
 /*   By: gonische <gonische@student.42wolfsburg.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/18 14:51:20 by gonische          #+#    #+#             */
-/*   Updated: 2024/10/25 15:28:35 by gonische         ###   ########.fr       */
+/*   Updated: 2024/10/26 15:29:02 by gonische         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philosophers.h"
 
-// static void	wait_philosophers_to_finish(t_philosopher philo[], size_t size)
-// {
-
-// }
+void	wait_philos_to_finish()
+{
+	
+}
 
 int	create_philosophers(t_philosopher philos[],
 			t_process *pdata, size_t size)
@@ -28,7 +28,13 @@ int	create_philosophers(t_philosopher philos[],
 		pdata->pid[i] = fork();
 		if (pdata->pid[i] == 0)
 		{
+			philos[i].fork_sem = sem_open(FORK_SEM_NAME, 0);
+			if (!philos[i].fork_sem || !philos[i].pdata->global_sem)
+				return (1);
+			philos[i].pdata->global_sem = sem_open(GLOBLA_SEM_NAME, 0);
 			philosopher_routine(&philos[i]);
+			sem_close(philos[i].fork_sem);
+			sem_close(philos[i].pdata->global_sem);
 			return (1);
 		}
 		i++;
@@ -40,16 +46,17 @@ static void	run_philosophers(t_process *pdata)
 {
 	const size_t	size = pdata->args.number_of_philosophers;
 	t_philosopher	philosophers[MAX_ARR_SIZE];
-	t_sem_data		forks_pull;
+	sem_t			*fork_sem;
 
-	if (!init_semaphores(&forks_pull, size, &pdata->global_sem))
+	if (!init_semaphores(&fork_sem, size, &(pdata->global_sem)))
 		return ;
-	init_philosopher(philosophers, size, &forks_pull, pdata);
+	init_philosopher(philosophers, size, pdata);
 	if (create_philosophers(philosophers, pdata, size))
 		exit(EXIT_SUCCESS);
 	for (int i = 0; i < size; i++)
 		waitpid(pdata->pid[i], NULL, 0);
-	destroy_semaphores(&forks_pull, &pdata->global_sem);
+	destroy_semaphore(pdata->global_sem, FORK_SEM_NAME);
+	destroy_semaphore(pdata->global_sem, GLOBLA_SEM_NAME);
 }
 
 int	main(int argc, char **argv)
