@@ -1,7 +1,7 @@
 # Project settings
 NAME = philo
 CC = cc
-FLAGS = -fsanitize=address -Wall -Wextra -Werror
+FLAGS = -fsanitize=address -Wall -Wextra #-Werror
 INCLUDE = -I include
 
 SRCS =	src/philosophers.c	\
@@ -17,11 +17,11 @@ OBJS = $(SRCS:.c=.o)
 
 all: $(NAME)
 
-$(NAME): $(OBJS)
-	$(CC) $(FLAGS) $(OBJS) -o $(NAME)
+$(NAME): $(SRCS)
+	$(CC) $(FLAGS) $(SRCS) $(INCLUDE) -o $(NAME)
 
-%.o: %.c
-	$(CC) $(CFLAGS) $(INCLUDE) -c $< -o $@
+# %.o: %.c
+# 	$(CC) $(CFLAGS) $(INCLUDE) -c $< -o $@
 
 clean:
 	rm -f $(OBJS)

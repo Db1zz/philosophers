@@ -6,16 +6,11 @@
 /*   By: gonische <gonische@student.42wolfsburg.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/18 14:51:20 by gonische          #+#    #+#             */
-/*   Updated: 2024/10/26 15:29:02 by gonische         ###   ########.fr       */
+/*   Updated: 2024/10/27 11:44:32 by gonische         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philosophers.h"
-
-void	wait_philos_to_finish()
-{
-	
-}
 
 int	create_philosophers(t_philosopher philos[],
 			t_process *pdata, size_t size)
@@ -29,9 +24,9 @@ int	create_philosophers(t_philosopher philos[],
 		if (pdata->pid[i] == 0)
 		{
 			philos[i].fork_sem = sem_open(FORK_SEM_NAME, 0);
+			philos[i].pdata->global_sem = sem_open(GLOBLA_SEM_NAME, 0);
 			if (!philos[i].fork_sem || !philos[i].pdata->global_sem)
 				return (1);
-			philos[i].pdata->global_sem = sem_open(GLOBLA_SEM_NAME, 0);
 			philosopher_routine(&philos[i]);
 			sem_close(philos[i].fork_sem);
 			sem_close(philos[i].pdata->global_sem);
@@ -65,6 +60,7 @@ int	main(int argc, char **argv)
 
 	if (!init_args(argc, argv, &pdata.args))
 		return (EXIT_FAILURE);
+	unlink_semaphores();
 	pdata.exit_status = false;
 	run_philosophers(&pdata);
 	return (EXIT_SUCCESS);

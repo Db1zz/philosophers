@@ -6,13 +6,11 @@
 /*   By: gonische <gonische@student.42wolfsburg.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/25 14:56:08 by gonische          #+#    #+#             */
-/*   Updated: 2024/10/26 14:53:54 by gonische         ###   ########.fr       */
+/*   Updated: 2024/10/26 22:52:43 by gonische         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philosophers.h"
-#include <errno.h>
-#include <string.h>
 
 void	take_forks(t_philosopher *philo)
 {

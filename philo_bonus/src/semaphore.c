@@ -6,7 +6,7 @@
 /*   By: gonische <gonische@student.42wolfsburg.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/24 12:03:24 by gonische          #+#    #+#             */
-/*   Updated: 2024/10/26 15:22:18 by gonische         ###   ########.fr       */
+/*   Updated: 2024/10/26 23:12:52 by gonische         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,12 @@ bool	open_semaphore(sem_t **sem, char *sem_name, int sem_size)
 		return (false);
 	}
 	return (true);
+}
+
+void	unlink_semaphores(void)
+{
+	sem_unlink(FORK_SEM_NAME);
+	sem_unlink(GLOBLA_SEM_NAME);
 }
 
 bool	destroy_semaphore(sem_t *sem, char *name)

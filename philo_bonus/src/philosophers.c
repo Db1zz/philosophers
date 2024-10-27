@@ -12,21 +12,6 @@
 
 #include "philosophers.h"
 
-bool	is_died(t_philosopher *philo)
-{
-	update_time(&philo->meal_time);
-	sem_wait(philo->pdata->global_sem);
-	if (philo->meal_time.time >= philo->pdata->args.time_to_die)
-	{
-		philo->state = E_STATE_DIED;
-		if (!philo->pdata->exit_status)
-			print_state(philo);
-		philo->pdata->exit_status = true;
-	}
-	sem_post(philo->pdata->global_sem);
-	return (philo->pdata->exit_status);
-}
-
 static bool	is_philo_done_eating(const t_philosopher *philo)
 {
 	return (philo->pdata->args.arguments_given == MAX_ARGS_AMOUNT
@@ -63,10 +48,5 @@ void	philosopher_routine(t_philosopher *philo)
 	init_time(&philo->meal_time);
 	init_time(&philo->timestamp);
 	while (!check_exit_status(philo) && !is_philo_done_eating(philo))
-	{
-		sem_wait(philo->pdata->global_sem);
-		print_state(philo);
-		sem_post(philo->pdata->global_sem);
-		while (check_update_state(philo));
-	}
+		check_update_state(philo);
 }
