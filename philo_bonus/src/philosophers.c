@@ -45,8 +45,17 @@ void	init_philosopher(t_philosopher philos[], size_t size, t_process *data)
 
 void	philosopher_routine(t_philosopher *philo)
 {
+	pthread_t	thread;
+
 	init_time(&philo->meal_time);
 	init_time(&philo->timestamp);
+	if (pthread_create(&thread, NULL, monitor_routine, philo))
+	{
+		printf("Error: cannot create monitor thread\n");
+		exit(EXIT_FAILURE);
+	}
 	while (!check_exit_status(philo) && !is_philo_done_eating(philo))
 		check_update_state(philo);
+	pthread_join(thread, NULL);
+	exit(EXIT_SUCCESS);
 }

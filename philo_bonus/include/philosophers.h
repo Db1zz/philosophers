@@ -6,7 +6,7 @@
 /*   By: gonische <gonische@student.42wolfsburg.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/13 15:17:40 by gonische          #+#    #+#             */
-/*   Updated: 2024/10/26 23:57:26 by gonische         ###   ########.fr       */
+/*   Updated: 2024/10/27 14:15:03 by gonische         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,11 @@
 # include <sys/wait.h>
 # include <string.h>
 # include <errno.h>
+
+# ifndef __USE_POSIX
+#  define __USE_POSIX 0
+# endif // __USE_POSIX
+# include <signal.h>
 
 # define MAX_ARR_SIZE 200
 # define MIN_ARGS_AMOUNT 5
@@ -74,7 +79,7 @@ typedef struct t_philosopher
 	t_process	*pdata;
 }	t_philosopher;
 
-typedef bool	(*t_state_function_p)(t_philosopher *);
+typedef void	(*t_state_function_p)(t_philosopher *);
 
 // Input handlers
 bool	check_arguments(const t_args *args);
@@ -90,20 +95,22 @@ void	unlink_semaphores(void);
 void	take_forks(t_philosopher *philo);
 void	put_forks(t_philosopher *philo);
 
+// Philosopher monitor
+void	*monitor_routine(void *philosopher);
+bool	is_died(t_philosopher *philo);
+
 // Philosopher functions
 void	init_philosopher(t_philosopher philos[], size_t size, t_process *data);
 void	philosopher_routine(t_philosopher *philo);
-bool	is_died(t_philosopher *philo);
 
 // State related functions
-bool	is_state_thinking(t_philosopher *philo);
-bool	is_state_eating(t_philosopher *philo);
-bool	is_state_sleeping(t_philosopher *philo);
 void	print_state(t_philosopher *philo);
-bool	check_update_state(t_philosopher *philo);
+void	check_update_state(t_philosopher *philo);
+void	state_thinking(t_philosopher *philo);
+void	state_eating(t_philosopher *philo);
+void	state_sleeping(t_philosopher *philo);
 
 // Utility functions
 int		ft_atoi(const char *str);
-bool	thread_sleep_routine(int64_t ms, bool (*f)(t_philosopher *),
-			void *f_d);
+void	ft_sleep(int64_t ms);
 #endif // PHILOSOPHERS_H

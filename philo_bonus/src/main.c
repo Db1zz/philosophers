@@ -6,7 +6,7 @@
 /*   By: gonische <gonische@student.42wolfsburg.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/18 14:51:20 by gonische          #+#    #+#             */
-/*   Updated: 2024/10/27 11:44:32 by gonische         ###   ########.fr       */
+/*   Updated: 2024/10/27 14:16:55 by gonische         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,13 +28,20 @@ int	create_philosophers(t_philosopher philos[],
 			if (!philos[i].fork_sem || !philos[i].pdata->global_sem)
 				return (1);
 			philosopher_routine(&philos[i]);
-			sem_close(philos[i].fork_sem);
-			sem_close(philos[i].pdata->global_sem);
 			return (1);
 		}
 		i++;
 	}
 	return (0);
+}
+
+void	kill_processes(pid_t pids[], size_t size)
+{
+	size_t	i;
+
+	i = 0;
+	while (i < size)
+		kill(pids[i++], SIGKILL);
 }
 
 static void	run_philosophers(t_process *pdata)
@@ -48,8 +55,8 @@ static void	run_philosophers(t_process *pdata)
 	init_philosopher(philosophers, size, pdata);
 	if (create_philosophers(philosophers, pdata, size))
 		exit(EXIT_SUCCESS);
-	for (int i = 0; i < size; i++)
-		waitpid(pdata->pid[i], NULL, 0);
+	waitpid(-1, NULL, 0);
+	kill_processes(pdata->pid, size);
 	destroy_semaphore(pdata->global_sem, FORK_SEM_NAME);
 	destroy_semaphore(pdata->global_sem, GLOBLA_SEM_NAME);
 }

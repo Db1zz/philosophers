@@ -6,7 +6,7 @@
 /*   By: gonische <gonische@student.42wolfsburg.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/13 15:00:59 by gonische          #+#    #+#             */
-/*   Updated: 2024/10/26 23:47:46 by gonische         ###   ########.fr       */
+/*   Updated: 2024/10/27 15:32:00 by gonische         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,16 +34,11 @@ int	ft_atoi(const char *str)
 	return (result * neg);
 }
 
-bool	thread_sleep_routine(int64_t ms, bool (*f)(t_philosopher *), void *f_d)
+void	ft_sleep(int64_t ms)
 {
 	int64_t	start;
 
 	start = get_time();
 	while ((get_time() - start) < ms)
-	{
-		if (f != NULL && f(f_d))
-			return (true);
-		usleep(100);
-	}
-	return (false);
+		usleep(250);
 }

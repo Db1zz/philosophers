@@ -8,6 +8,7 @@ SRCS =	src/philosophers.c	\
 		src/input_handler.c	\
 		src/fork.c			\
 		src/semaphore.c		\
+		src/monitor.c		\
 		src/utils.c			\
 		src/states.c		\
 		src/time.c			\
