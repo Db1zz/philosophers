@@ -6,7 +6,7 @@
 /*   By: gonische <gonische@student.42wolfsburg.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/13 15:17:40 by gonische          #+#    #+#             */
-/*   Updated: 2024/10/28 14:11:51 by gonische         ###   ########.fr       */
+/*   Updated: 2024/10/28 15:44:03 by gonische         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,8 +36,8 @@
 # define MIN_ARGS_AMOUNT 5
 # define MAX_ARGS_AMOUNT 6
 
-# define FORK_SEM_NAME "._._PHILO_FORK_SEM_._"
-# define GLOBLA_SEM_NAME "._._PHILO_GLOBAL_SEM_._"
+# define FORK_SEM_NAME "_PHILO_FORK_SEM_"
+# define GLOBLA_SEM_NAME "_PHILO_GLOBAL_SEM_"
 
 typedef enum e_state
 {

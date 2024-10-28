@@ -6,7 +6,7 @@
 /*   By: gonische <gonische@student.42wolfsburg.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/24 12:03:24 by gonische          #+#    #+#             */
-/*   Updated: 2024/10/28 14:11:25 by gonische         ###   ########.fr       */
+/*   Updated: 2024/10/28 15:43:08 by gonische         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ bool	open_semaphore(sem_t **sem, char *sem_name, int sem_size)
 		printf("%s sem_size cannot be < 0\n", msg_err_issuer);
 		return (false);
 	}
-	*sem = sem_open(sem_name, O_CREAT, 0644, sem_size);
+	*sem = sem_open(sem_name, O_CREAT, S_IRWXU, sem_size);
 	if (*sem == NULL)
 	{
 		printf("%s cannot open semaphore\n", msg_err_issuer);

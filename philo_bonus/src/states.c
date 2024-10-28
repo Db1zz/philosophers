@@ -6,7 +6,7 @@
 /*   By: gonische <gonische@student.42wolfsburg.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/18 13:01:04 by gonische          #+#    #+#             */
-/*   Updated: 2024/10/28 14:14:44 by gonische         ###   ########.fr       */
+/*   Updated: 2024/10/28 15:51:53 by gonische         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,9 +20,11 @@ void	state_thinking(t_philosopher *philo)
 
 void	state_eating(t_philosopher *philo)
 {
+	sem_wait(philo->pdata->global_sem);
 	update_time(&philo->meal_time);
 	philo->meal_time.time = 0;
 	philo->meal_counter++;
+	sem_post(philo->pdata->global_sem);
 	ft_sleep(philo->pdata->args.time_to_eat);
 	put_forks(philo);
 	philo->state = E_STATE_SLEEPING;
@@ -36,6 +38,7 @@ void	state_sleeping(t_philosopher *philo)
 
 void	check_update_state(t_philosopher *philo)
 {
+	t_state							state;
 	static const t_state_function_p	functions[] = {
 		state_thinking,
 		state_eating,
@@ -44,8 +47,9 @@ void	check_update_state(t_philosopher *philo)
 
 	sem_wait(philo->pdata->global_sem);
 	print_state(philo);
+	state = philo->state;
 	sem_post(philo->pdata->global_sem);
-	functions[(int)philo->state](philo);
+	functions[(int)state](philo);
 }
 
 // void	print_state(t_philosopher *philo)
