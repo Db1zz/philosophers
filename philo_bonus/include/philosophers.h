@@ -6,7 +6,7 @@
 /*   By: gonische <gonische@student.42wolfsburg.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/13 15:17:40 by gonische          #+#    #+#             */
-/*   Updated: 2024/10/27 14:15:03 by gonische         ###   ########.fr       */
+/*   Updated: 2024/10/28 14:11:51 by gonische         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,8 +26,6 @@
 # include <sys/stat.h>
 # include <unistd.h>
 # include <sys/wait.h>
-# include <string.h>
-# include <errno.h>
 
 # ifndef __USE_POSIX
 #  define __USE_POSIX 0
@@ -88,7 +86,8 @@ bool	init_args(int argc, char **argv, t_args *args);
 // Semaphore wrappers
 bool	open_semaphore(sem_t **sem, char *sem_name, int sem_size);
 bool	destroy_semaphore(sem_t *sem, char *name);
-bool	init_semaphores(sem_t **fork_sem, size_t fork_sem_size, sem_t **global_sem);
+bool	init_semaphores(sem_t **fork_sem, size_t fork_sem_size,
+			sem_t **global_sem);
 void	unlink_semaphores(void);
 
 // Forks

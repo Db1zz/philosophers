@@ -6,14 +6,13 @@
 /*   By: gonische <gonische@student.42wolfsburg.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/18 14:51:20 by gonische          #+#    #+#             */
-/*   Updated: 2024/10/27 14:16:55 by gonische         ###   ########.fr       */
+/*   Updated: 2024/10/28 12:37:40 by gonische         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philosophers.h"
 
-int	create_philosophers(t_philosopher philos[],
-			t_process *pdata, size_t size)
+int	create_philosophers(t_philosopher philos[], t_process *pdata, size_t size)
 {
 	size_t	i;
 
@@ -57,7 +56,7 @@ static void	run_philosophers(t_process *pdata)
 		exit(EXIT_SUCCESS);
 	waitpid(-1, NULL, 0);
 	kill_processes(pdata->pid, size);
-	destroy_semaphore(pdata->global_sem, FORK_SEM_NAME);
+	destroy_semaphore(fork_sem, FORK_SEM_NAME);
 	destroy_semaphore(pdata->global_sem, GLOBLA_SEM_NAME);
 }
 

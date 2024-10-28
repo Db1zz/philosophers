@@ -12,22 +12,6 @@
 
 #include "philosophers.h"
 
-static bool	is_philo_done_eating(const t_philosopher *philo)
-{
-	return (philo->pdata->args.arguments_given == MAX_ARGS_AMOUNT
-		&& philo->meal_counter == philo->pdata->args.num_eat_cycles);
-}
-
-static bool	check_exit_status(const t_philosopher *philo)
-{
-	bool	exit_status;
-
-	sem_wait(philo->pdata->global_sem);
-	exit_status = philo->pdata->exit_status;
-	sem_post(philo->pdata->global_sem);
-	return (exit_status);
-}
-
 void	init_philosopher(t_philosopher philos[], size_t size, t_process *data)
 {
 	size_t	i;
@@ -39,6 +23,8 @@ void	init_philosopher(t_philosopher philos[], size_t size, t_process *data)
 		philos[i].state = E_STATE_THINKING;
 		philos[i].meal_counter = 0;
 		philos[i].pdata = data;
+		init_time(&philos[i].meal_time);
+		init_time(&philos[i].timestamp);
 		i++;
 	}
 }
@@ -47,15 +33,13 @@ void	philosopher_routine(t_philosopher *philo)
 {
 	pthread_t	thread;
 
-	init_time(&philo->meal_time);
-	init_time(&philo->timestamp);
 	if (pthread_create(&thread, NULL, monitor_routine, philo))
 	{
 		printf("Error: cannot create monitor thread\n");
 		exit(EXIT_FAILURE);
 	}
-	while (!check_exit_status(philo) && !is_philo_done_eating(philo))
+	pthread_detach(thread);
+	while (true)
 		check_update_state(philo);
-	pthread_join(thread, NULL);
 	exit(EXIT_SUCCESS);
 }

@@ -6,7 +6,7 @@
 /*   By: gonische <gonische@student.42wolfsburg.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/13 15:00:59 by gonische          #+#    #+#             */
-/*   Updated: 2024/10/27 15:32:00 by gonische         ###   ########.fr       */
+/*   Updated: 2024/10/28 12:53:32 by gonische         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,5 +40,5 @@ void	ft_sleep(int64_t ms)
 
 	start = get_time();
 	while ((get_time() - start) < ms)
-		usleep(250);
+		usleep(100);
 }

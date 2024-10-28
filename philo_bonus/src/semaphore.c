@@ -6,7 +6,7 @@
 /*   By: gonische <gonische@student.42wolfsburg.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/24 12:03:24 by gonische          #+#    #+#             */
-/*   Updated: 2024/10/27 12:58:06 by gonische         ###   ########.fr       */
+/*   Updated: 2024/10/28 14:11:25 by gonische         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ bool	open_semaphore(sem_t **sem, char *sem_name, int sem_size)
 	if (sem_size < 0)
 	{
 		printf("%s sem_size cannot be < 0\n", msg_err_issuer);
-		return (false); 
+		return (false);
 	}
 	*sem = sem_open(sem_name, O_CREAT, 0644, sem_size);
 	if (*sem == NULL)
@@ -47,8 +47,7 @@ bool	destroy_semaphore(sem_t *sem, char *name)
 
 	if (sem_close(sem))
 	{
-		printf("%s\n", strerror(errno));
-		// printf("%s sem_close failed\n", msg_err_issuer);
+		printf("%s sem_close failed\n", msg_err_issuer);
 		return (false);
 	}
 	if (sem_unlink(name) != 0)
@@ -59,7 +58,8 @@ bool	destroy_semaphore(sem_t *sem, char *name)
 	return (true);
 }
 
-bool	init_semaphores(sem_t **fork_sem, size_t fork_sem_size, sem_t **global_sem)
+bool	init_semaphores(sem_t **fork_sem, size_t fork_sem_size,
+			sem_t **global_sem)
 {
 	if (!open_semaphore(fork_sem, FORK_SEM_NAME, fork_sem_size))
 		return (false);

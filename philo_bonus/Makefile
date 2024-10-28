@@ -1,7 +1,7 @@
 # Project settings
-NAME = philo
+NAME = philo_bonus
 CC = cc
-FLAGS = -fsanitize=address -Wall -Wextra #-Werror
+FLAGS = -Wall -Wextra -Werror
 INCLUDE = -I include
 
 SRCS =	src/philosophers.c	\

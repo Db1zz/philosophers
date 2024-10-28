@@ -6,7 +6,7 @@
 /*   By: gonische <gonische@student.42wolfsburg.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/26 23:02:44 by gonische          #+#    #+#             */
-/*   Updated: 2024/10/27 14:53:37 by gonische         ###   ########.fr       */
+/*   Updated: 2024/10/28 12:59:19 by gonische         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,27 +25,23 @@ void	exit_on_death(t_philosopher *philo)
 	sem_post(philo->pdata->global_sem);
 }
 
+static void	is_philo_done_eating(const t_philosopher *philo)
+{
+	if (philo->pdata->args.arguments_given == MAX_ARGS_AMOUNT
+		&& philo->meal_counter == philo->pdata->args.num_eat_cycles)
+		exit(EXIT_SUCCESS);
+}
+
 void	*monitor_routine(void *philosopher)
 {
 	t_philosopher	*philo;
-	t_state			perv_state;
 
 	philo = (t_philosopher *)philosopher;
-	perv_state = philo->state;
-	sem_wait(philo->pdata->global_sem);
-	print_state(philo);
-	sem_post(philo->pdata->global_sem);
 	while (true)
 	{
+		is_philo_done_eating(philo);
 		exit_on_death(philo);
-		if (philo->state != perv_state)
-		{
-			sem_wait(philo->pdata->global_sem);
-			print_state(philo);
-			sem_post(philo->pdata->global_sem);
-			perv_state = philo->state;
-		}
-		usleep(250);
+		usleep(1000);
 	}
 	return (NULL);
 }
