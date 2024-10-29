@@ -6,7 +6,7 @@
 /*   By: gonische <gonische@student.42wolfsburg.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/18 13:01:04 by gonische          #+#    #+#             */
-/*   Updated: 2024/10/28 15:51:53 by gonische         ###   ########.fr       */
+/*   Updated: 2024/10/29 18:56:37 by gonische         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,7 @@ void	check_update_state(t_philosopher *philo)
 // 	else if (philo->state == E_STATE_THINKING)
 // 		printf("T[%lu] philo[%zu] is thinking (＃＞＜)\n", t, philo->id);
 // 	if (philo->state == E_STATE_DIED)
-// 		printf("T[%lu] philo[%zu] is died ٩(× ×)۶\n", t, philo->id);
+// 		printf("T[%lu] philo[%zu] died ٩(× ×)۶\n", t, philo->id);
 // }
 
 void	print_state(t_philosopher *philo)

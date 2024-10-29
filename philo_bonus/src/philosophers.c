@@ -29,6 +29,18 @@ void	init_philosopher(t_philosopher philos[], size_t size, t_process *data)
 	}
 }
 
+static bool	check_exit_status(t_philosopher *philo)
+{
+	bool	status;
+
+	status = false;
+	sem_wait(philo->pdata->global_sem);
+	if (philo->pdata->exit_status > -1)
+		status = true;
+	sem_post(philo->pdata->global_sem);
+	return (status);
+}
+
 void	philosopher_routine(t_philosopher *philo)
 {
 	pthread_t	thread;
@@ -38,8 +50,7 @@ void	philosopher_routine(t_philosopher *philo)
 		printf("Error: cannot create monitor thread\n");
 		exit(EXIT_FAILURE);
 	}
-	pthread_detach(thread);
-	while (true)
+	while (!check_exit_status(philo))
 		check_update_state(philo);
-	exit(EXIT_SUCCESS);
+	pthread_join(thread, NULL);
 }

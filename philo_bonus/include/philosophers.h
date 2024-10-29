@@ -6,7 +6,7 @@
 /*   By: gonische <gonische@student.42wolfsburg.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/13 15:17:40 by gonische          #+#    #+#             */
-/*   Updated: 2024/10/28 15:44:03 by gonische         ###   ########.fr       */
+/*   Updated: 2024/10/29 18:48:19 by gonische         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,10 +60,10 @@ typedef struct t_args
 
 typedef struct t_process
 {
-	t_args		args;
-	bool		exit_status;
-	sem_t		*global_sem;
-	pid_t		pid[MAX_ARR_SIZE];
+	t_args	args;
+	int		exit_status;
+	sem_t	*global_sem;
+	pid_t	pid[MAX_ARR_SIZE];
 }	t_process;
 
 typedef struct t_philosopher
@@ -96,7 +96,6 @@ void	put_forks(t_philosopher *philo);
 
 // Philosopher monitor
 void	*monitor_routine(void *philosopher);
-bool	is_died(t_philosopher *philo);
 
 // Philosopher functions
 void	init_philosopher(t_philosopher philos[], size_t size, t_process *data);

@@ -6,7 +6,7 @@
 /*   By: gonische <gonische@student.42wolfsburg.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/24 12:03:24 by gonische          #+#    #+#             */
-/*   Updated: 2024/10/28 15:43:08 by gonische         ###   ########.fr       */
+/*   Updated: 2024/10/29 14:08:39 by gonische         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ bool	destroy_semaphore(sem_t *sem, char *name)
 		printf("%s sem_close failed\n", msg_err_issuer);
 		return (false);
 	}
-	if (sem_unlink(name) != 0)
+	if (sem_unlink(name))
 	{
 		printf("%s sem_unlink failed\n", msg_err_issuer);
 		return (false);
@@ -68,5 +68,6 @@ bool	init_semaphores(sem_t **fork_sem, size_t fork_sem_size,
 		destroy_semaphore(*fork_sem, FORK_SEM_NAME);
 		return (false);
 	}
+
 	return (true);
 }

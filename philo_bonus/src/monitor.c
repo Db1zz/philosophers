@@ -6,13 +6,13 @@
 /*   By: gonische <gonische@student.42wolfsburg.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/26 23:02:44 by gonische          #+#    #+#             */
-/*   Updated: 2024/10/28 15:28:51 by gonische         ###   ########.fr       */
+/*   Updated: 2024/10/29 18:55:24 by gonische         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philosophers.h"
 
-void	exit_on_death(t_philosopher *philo)
+static bool exit_on_death(t_philosopher *philo)
 {
 	sem_wait(philo->pdata->global_sem);
 	update_time(&philo->meal_time);
@@ -20,20 +20,26 @@ void	exit_on_death(t_philosopher *philo)
 	{
 		philo->state = E_STATE_DIED;
 		print_state(philo);
-		exit(EXIT_SUCCESS);
+		philo->pdata->exit_status = EXIT_FAILURE;
+		return (true);
 	}
 	sem_post(philo->pdata->global_sem);
+	return (false);
 }
 
-static void	is_philo_done_eating(const t_philosopher *philo)
+static bool	is_philo_done_eating(const t_philosopher *philo)
 {
 	sem_wait(philo->pdata->global_sem);
 	if (philo->pdata->args.arguments_given == MAX_ARGS_AMOUNT
-		&& philo->meal_counter == philo->pdata->args.num_eat_cycles)
+		&& philo->meal_counter == philo->pdata->args.num_eat_cycles
+		&& philo->state == E_STATE_SLEEPING)
 	{
-		exit(EXIT_SUCCESS);
+		philo->pdata->exit_status = EXIT_SUCCESS;
+		sem_post(philo->pdata->global_sem);
+		return (true);
 	}
 	sem_post(philo->pdata->global_sem);
+	return (false);
 }
 
 void	*monitor_routine(void *philosopher)
@@ -41,11 +47,7 @@ void	*monitor_routine(void *philosopher)
 	t_philosopher	*philo;
 
 	philo = (t_philosopher *)philosopher;
-	while (true)
-	{
-		is_philo_done_eating(philo);
-		exit_on_death(philo);
+	while (!is_philo_done_eating(philo) && !exit_on_death(philo))
 		usleep(1000);
-	}
 	return (NULL);
 }
