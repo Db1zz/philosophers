@@ -78,8 +78,8 @@ void	*philosopher_routine(void *philosopher)
 	t_philosopher	*philo;
 
 	philo = (t_philosopher *)philosopher;
-	init_time(&philo->meal_time);
 	init_time(&philo->timestamp);
+	init_time(&philo->meal_time);
 	while (!check_exit_status(philo) && !is_philo_done_eating(philo))
 	{
 		pthread_mutex_lock(&philo->pdata->global_mutex);

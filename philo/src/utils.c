@@ -6,7 +6,7 @@
 /*   By: gonische <gonische@student.42wolfsburg.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/13 15:00:59 by gonische          #+#    #+#             */
-/*   Updated: 2024/10/27 15:14:46 by gonische         ###   ########.fr       */
+/*   Updated: 2024/10/30 16:40:20 by gonische         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ bool	thread_sleep_routine(int64_t ms, bool (*f)(t_philosopher *), void *f_d)
 	{
 		if (f != NULL && f(f_d))
 			return (true);
-		usleep(100);
+		usleep(ms);
 	}
 	return (false);
 }
