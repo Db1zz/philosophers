@@ -6,7 +6,7 @@
 /*   By: gonische <gonische@student.42wolfsburg.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/13 15:17:40 by gonische          #+#    #+#             */
-/*   Updated: 2024/10/29 18:48:19 by gonische         ###   ########.fr       */
+/*   Updated: 2024/10/30 16:30:03 by gonische         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,8 +84,9 @@ bool	check_arguments(const t_args *args);
 bool	init_args(int argc, char **argv, t_args *args);
 
 // Semaphore wrappers
-bool	open_semaphore(sem_t **sem, char *sem_name, int sem_size);
-bool	destroy_semaphore(sem_t *sem, char *name);
+bool	init_semaphore(sem_t **sem, char *sem_name, int sem_size);
+void	destroy_semaphore(sem_t *sem, char *name);
+void	cleanup_semaphores(sem_t *fork_sem, sem_t *global_sem);
 bool	init_semaphores(sem_t **fork_sem, size_t fork_sem_size,
 			sem_t **global_sem);
 void	unlink_semaphores(void);
@@ -98,8 +99,11 @@ void	put_forks(t_philosopher *philo);
 void	*monitor_routine(void *philosopher);
 
 // Philosopher functions
-void	init_philosopher(t_philosopher philos[], size_t size, t_process *data);
+void	init_philosopher(t_philosopher philos[], size_t size,
+			t_process *data, sem_t *fork_sem);
 void	philosopher_routine(t_philosopher *philo);
+void	philosopher_reopen_semaphores(t_philosopher *philo);
+void	philosopher_exit_routine(t_philosopher *philo);
 
 // State related functions
 void	print_state(t_philosopher *philo);

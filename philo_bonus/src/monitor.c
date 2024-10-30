@@ -6,13 +6,13 @@
 /*   By: gonische <gonische@student.42wolfsburg.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/26 23:02:44 by gonische          #+#    #+#             */
-/*   Updated: 2024/10/29 22:19:49 by gonische         ###   ########.fr       */
+/*   Updated: 2024/10/30 16:30:36 by gonische         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philosophers.h"
 
-static bool exit_on_death(t_philosopher *philo)
+static bool	exit_on_death(t_philosopher *philo)
 {
 	sem_wait(philo->pdata->global_sem);
 	update_time(&philo->meal_time);
@@ -49,5 +49,6 @@ void	*monitor_routine(void *philosopher)
 	philo = (t_philosopher *)philosopher;
 	while (!is_philo_done_eating(philo) && !exit_on_death(philo))
 		usleep(1000);
+	philosopher_exit_routine(philo);
 	return (NULL);
 }

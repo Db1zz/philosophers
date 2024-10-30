@@ -6,13 +6,13 @@
 /*   By: gonische <gonische@student.42wolfsburg.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/18 14:51:20 by gonische          #+#    #+#             */
-/*   Updated: 2024/10/29 22:27:16 by gonische         ###   ########.fr       */
+/*   Updated: 2024/10/30 15:38:06 by gonische         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philosophers.h"
 
-t_philosopher	*create_philosophers(t_philosopher philos[],
+static t_philosopher	*create_philosophers(t_philosopher philos[],
 			t_process *pdata, size_t size)
 {
 	size_t	i;
@@ -66,24 +66,17 @@ static void	run_philosophers(t_process *pdata)
 
 	if (!init_semaphores(&fork_sem, size, &pdata->global_sem))
 		return ;
-	init_philosopher(philosophers, size, pdata);
+	init_philosopher(philosophers, size, pdata, fork_sem);
 	created_philo = create_philosophers(philosophers, pdata, size);
 	if (created_philo == NULL)
 	{
 		wait_philos_to_finish(pdata->pid, size);
-		destroy_semaphore(fork_sem, FORK_SEM_NAME);
-		destroy_semaphore(pdata->global_sem, GLOBLA_SEM_NAME);
+		cleanup_semaphores(fork_sem, pdata->global_sem);
 	}
 	else
 	{
-		sem_close(pdata->global_sem);
-		sem_close(fork_sem);
-		created_philo->fork_sem = sem_open(FORK_SEM_NAME, 0);
-		created_philo->pdata->global_sem = sem_open(GLOBLA_SEM_NAME, 0);
+		philosopher_reopen_semaphores(created_philo);
 		philosopher_routine(created_philo);
-		exit(pdata->exit_status);
-		sem_close(pdata->global_sem);
-		sem_close(fork_sem);
 	}
 }
 

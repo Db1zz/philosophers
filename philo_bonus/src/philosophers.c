@@ -12,23 +12,6 @@
 
 #include "philosophers.h"
 
-void	init_philosopher(t_philosopher philos[], size_t size, t_process *data)
-{
-	size_t	i;
-
-	i = 0;
-	while (i < size)
-	{
-		philos[i].id = i + 1;
-		philos[i].state = E_STATE_THINKING;
-		philos[i].meal_counter = 0;
-		philos[i].pdata = data;
-		init_time(&philos[i].meal_time);
-		init_time(&philos[i].timestamp);
-		i++;
-	}
-}
-
 static bool	check_exit_status(t_philosopher *philo)
 {
 	bool	status;
@@ -41,6 +24,25 @@ static bool	check_exit_status(t_philosopher *philo)
 	return (status);
 }
 
+void	init_philosopher(t_philosopher philos[], size_t size,
+			t_process *data, sem_t *fork_sem)
+{
+	size_t	i;
+
+	i = 0;
+	while (i < size)
+	{
+		philos[i].id = i + 1;
+		philos[i].state = E_STATE_THINKING;
+		philos[i].meal_counter = 0;
+		philos[i].pdata = data;
+		philos[i].fork_sem = fork_sem;
+		init_time(&philos[i].meal_time);
+		init_time(&philos[i].timestamp);
+		i++;
+	}
+}
+
 void	philosopher_routine(t_philosopher *philo)
 {
 	pthread_t	thread;
@@ -50,7 +52,29 @@ void	philosopher_routine(t_philosopher *philo)
 		printf("Error: cannot create monitor thread\n");
 		exit(EXIT_FAILURE);
 	}
+	pthread_detach(thread);
 	while (!check_exit_status(philo))
 		check_update_state(philo);
-	pthread_join(thread, NULL);
+}
+
+/*
+	Since the child process doesn't inherit descriptors from the parent,
+	we have to reopen each semaphore.
+*/
+void	philosopher_reopen_semaphores(t_philosopher *philo)
+{
+	sem_close(philo->fork_sem);
+	sem_close(philo->pdata->global_sem);
+	philo->fork_sem = sem_open(FORK_SEM_NAME, 0);
+	philo->pdata->global_sem = sem_open(GLOBLA_SEM_NAME, 0);
+}
+
+/*
+	равлик)
+*/
+void	philosopher_exit_routine(t_philosopher *philo)
+{
+	sem_close(philo->fork_sem);
+	sem_close(philo->pdata->global_sem);
+	exit(philo->pdata->exit_status);
 }

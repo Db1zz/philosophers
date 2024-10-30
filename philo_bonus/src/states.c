@@ -6,7 +6,7 @@
 /*   By: gonische <gonische@student.42wolfsburg.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/18 13:01:04 by gonische          #+#    #+#             */
-/*   Updated: 2024/10/29 22:11:01 by gonische         ###   ########.fr       */
+/*   Updated: 2024/10/30 15:40:02 by gonische         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,9 @@
 void	state_thinking(t_philosopher *philo)
 {
 	take_forks(philo);
+	sem_wait(philo->pdata->global_sem);
 	philo->state = E_STATE_EATING;
+	sem_post(philo->pdata->global_sem);
 }
 
 void	state_eating(t_philosopher *philo)
@@ -27,18 +29,21 @@ void	state_eating(t_philosopher *philo)
 	sem_post(philo->pdata->global_sem);
 	ft_sleep(philo->pdata->args.time_to_eat);
 	put_forks(philo);
+	sem_wait(philo->pdata->global_sem);
 	philo->state = E_STATE_SLEEPING;
+	sem_post(philo->pdata->global_sem);
 }
 
 void	state_sleeping(t_philosopher *philo)
 {
 	ft_sleep(philo->pdata->args.time_to_sleep);
+	sem_wait(philo->pdata->global_sem);
 	philo->state = E_STATE_THINKING;
+	sem_post(philo->pdata->global_sem);
 }
 
 void	check_update_state(t_philosopher *philo)
 {
-	t_state							state;
 	static const t_state_function_p	functions[] = {
 		state_thinking,
 		state_eating,
@@ -47,9 +52,8 @@ void	check_update_state(t_philosopher *philo)
 
 	sem_wait(philo->pdata->global_sem);
 	print_state(philo);
-	state = philo->state;
 	sem_post(philo->pdata->global_sem);
-	functions[(int)state](philo);
+	functions[(int)philo->state](philo);
 }
 
 // void	print_state(t_philosopher *philo)
