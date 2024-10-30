@@ -6,7 +6,7 @@
 /*   By: gonische <gonische@student.42wolfsburg.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/18 14:51:20 by gonische          #+#    #+#             */
-/*   Updated: 2024/10/29 18:58:06 by gonische         ###   ########.fr       */
+/*   Updated: 2024/10/29 22:27:16 by gonische         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,10 +76,14 @@ static void	run_philosophers(t_process *pdata)
 	}
 	else
 	{
-		philosopher_routine(created_philo);
 		sem_close(pdata->global_sem);
 		sem_close(fork_sem);
+		created_philo->fork_sem = sem_open(FORK_SEM_NAME, 0);
+		created_philo->pdata->global_sem = sem_open(GLOBLA_SEM_NAME, 0);
+		philosopher_routine(created_philo);
 		exit(pdata->exit_status);
+		sem_close(pdata->global_sem);
+		sem_close(fork_sem);
 	}
 }
 

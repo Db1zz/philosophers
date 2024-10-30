@@ -6,7 +6,7 @@
 /*   By: gonische <gonische@student.42wolfsburg.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/18 13:01:04 by gonische          #+#    #+#             */
-/*   Updated: 2024/10/29 18:56:37 by gonische         ###   ########.fr       */
+/*   Updated: 2024/10/29 22:11:01 by gonische         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,7 +77,7 @@ void	print_state(t_philosopher *philo)
 {
 	int64_t	t;
 
-	if (philo->pdata->exit_status)
+	if (philo->pdata->exit_status > -1)
 		return ;
 	update_time(&philo->timestamp);
 	t = philo->timestamp.time;
