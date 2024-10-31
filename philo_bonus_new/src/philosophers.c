@@ -1,29 +1,25 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   time.h                                             :+:      :+:    :+:   */
+/*   philosophers.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: gonische <gonische@student.42wolfsburg.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/10/22 12:13:50 by gonische          #+#    #+#             */
-/*   Updated: 2024/10/31 14:12:26 by gonische         ###   ########.fr       */
+/*   Created: 2024/10/31 14:23:27 by gonische          #+#    #+#             */
+/*   Updated: 2024/10/31 16:29:02 by gonische         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef TIME_H
-# define TIME_H
+#include "philosophers.h"
 
-# include <stdint.h>
-
-typedef struct t_time
+void	init_philosopher(t_philosopher *philo, t_process *pdata)
 {
-	int64_t	time;
-	int64_t	pervious;
-	int64_t	diff;
-}	t_time;
-
-int64_t	get_time(void);
-void	init_time(t_time *time);
-void	update_time(t_time *time);
-
-#endif // TIME_H
+	philo->id = 0;
+	philo->pdata = pdata;
+	philo->state = E_STATE_THINKING;
+	philo->meal_counter = 0;
+	if (pdata->args.arguments_given == MAX_ARGS_AMOUNT)
+		philo->is_meals_counter_needed = true;
+	init_time(&philo->timestamp);
+	init_time(&philo->meal_time);
+}

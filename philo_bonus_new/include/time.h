@@ -6,7 +6,7 @@
 /*   By: gonische <gonische@student.42wolfsburg.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/22 12:13:50 by gonische          #+#    #+#             */
-/*   Updated: 2024/10/31 14:12:26 by gonische         ###   ########.fr       */
+/*   Updated: 2024/10/31 14:21:06 by gonische         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,8 @@
 # define TIME_H
 
 # include <stdint.h>
+# include <sys/time.h>
+# include <unistd.h>
 
 typedef struct t_time
 {
