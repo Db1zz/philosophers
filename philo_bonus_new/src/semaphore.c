@@ -6,7 +6,7 @@
 /*   By: gonische <gonische@student.42wolfsburg.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/31 14:26:21 by gonische          #+#    #+#             */
-/*   Updated: 2024/11/01 15:01:04 by gonische         ###   ########.fr       */
+/*   Updated: 2024/11/01 23:41:56 by gonische         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,17 +45,29 @@ void	close_semaphore(sem_t *sem)
 
 bool	open_semaphores(t_process *pdata)
 {
+	bool			status;
 	const size_t	fork_sem_size = pdata->args.number_of_philosophers;
 
-	if (!open_semaphore(&pdata->fork_sem, FORK_SEM_NAME, fork_sem_size))
-		return (false);
-	if (!open_semaphore(&pdata->global_sem, GLOBAL_SEM_NAME, 1))
+	status = true;
+	while (true)
+	{
+		if (!open_semaphore(&pdata->fork_sem, FORK_SEM_NAME, fork_sem_size))
+			return (false);
+		if (!open_semaphore(&pdata->global_sem, GLOBAL_SEM_NAME, 1))
+		{
+			status = false;
+			break ;
+		}
+		if (!open_semaphore(&pdata->print_sem, PRINT_SEM_NAME, 1))
+			status = false;
+		break ;
+	}
+	if (status == false)
 	{
 		cleanup_semaphores(pdata);
 		unlink_semaphores();
-		return (false);
 	}
-	return (true);
+	return (status);
 }
 
 void	cleanup_semaphores(t_process *pdata)
@@ -64,10 +76,13 @@ void	cleanup_semaphores(t_process *pdata)
 		close_semaphore(pdata->fork_sem);
 	if (pdata->global_sem)
 		close_semaphore(pdata->global_sem);
+	if (pdata->print_sem)
+		close_semaphore(pdata->print_sem);
 }
 
 void	unlink_semaphores(void)
 {
 	sem_unlink(FORK_SEM_NAME);
 	sem_unlink(GLOBAL_SEM_NAME);
+	sem_unlink(PRINT_SEM_NAME);
 }

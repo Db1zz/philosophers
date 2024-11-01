@@ -6,7 +6,7 @@
 /*   By: gonische <gonische@student.42wolfsburg.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/01 13:00:24 by gonische          #+#    #+#             */
-/*   Updated: 2024/11/01 14:24:34 by gonische         ###   ########.fr       */
+/*   Updated: 2024/11/02 00:13:06 by gonische         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,9 +48,9 @@ void	check_update_state(t_philosopher *philo)
 		state_sleeping
 	};
 
-	sem_wait(philo->pdata->global_sem);
+	sem_wait(philo->pdata->print_sem);
 	print_state(philo);
-	sem_post(philo->pdata->global_sem);
+	sem_post(philo->pdata->print_sem);
 	functions[(int)philo->state](philo);
 }
 

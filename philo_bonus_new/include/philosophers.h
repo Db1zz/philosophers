@@ -6,7 +6,7 @@
 /*   By: gonische <gonische@student.42wolfsburg.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/31 14:09:58 by gonische          #+#    #+#             */
-/*   Updated: 2024/11/01 15:33:58 by gonische         ###   ########.fr       */
+/*   Updated: 2024/11/01 23:30:20 by gonische         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,7 @@ typedef struct t_process
 	t_args	args;
 	int		exit_status;
 	sem_t	*global_sem;
-	sem_t	*exit_sem;
+	sem_t	*print_sem;
 	sem_t	*fork_sem;
 	pid_t	pids[MAX_ARR_SIZE];
 }	t_process;

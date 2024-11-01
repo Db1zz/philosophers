@@ -6,7 +6,7 @@
 /*   By: gonische <gonische@student.42wolfsburg.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/20 19:17:32 by gonische          #+#    #+#             */
-/*   Updated: 2024/10/31 16:28:13 by gonische         ###   ########.fr       */
+/*   Updated: 2024/11/02 00:14:11 by gonische         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,8 @@ static bool	check_arguments(const t_args *args)
 		printf(" values cannot be lower than 60ms and greater int64_t.\n");
 		return (false);
 	}
-	else if (args->num_eat_cycles <= 0 && args->arguments_given == MAX_ARGS_AMOUNT)
+	else if (args->num_eat_cycles <= 0
+		&& args->arguments_given == MAX_ARGS_AMOUNT)
 	{
 		printf("Error: number_of_times_each_philosopher_must_eat is <= 0\n");
 		return (false);

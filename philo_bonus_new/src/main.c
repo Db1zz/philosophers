@@ -6,7 +6,7 @@
 /*   By: gonische <gonische@student.42wolfsburg.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/31 13:48:35 by gonische          #+#    #+#             */
-/*   Updated: 2024/11/01 15:35:00 by gonische         ###   ########.fr       */
+/*   Updated: 2024/11/02 00:03:44 by gonische         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 static void	init_process_data(t_process *pdata)
 {
-	pdata->exit_sem = NULL;
+	pdata->print_sem = NULL;
 	pdata->fork_sem = NULL;
 	pdata->global_sem = NULL;
 	pdata->exit_status = -1;
@@ -22,7 +22,7 @@ static void	init_process_data(t_process *pdata)
 
 int	main(int argc, char **argv)
 {
-	t_process		pdata;
+	t_process	pdata;
 
 	init_process_data(&pdata);
 	if (!parse_args(argc, argv, &pdata.args))

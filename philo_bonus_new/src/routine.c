@@ -6,12 +6,11 @@
 /*   By: gonische <gonische@student.42wolfsburg.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/31 23:34:53 by gonische          #+#    #+#             */
-/*   Updated: 2024/11/01 15:31:30 by gonische         ###   ########.fr       */
+/*   Updated: 2024/11/02 00:13:45 by gonische         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philosophers.h"
-
 
 /*
 	The reason why we need to reopen semaphores
@@ -26,18 +25,21 @@ static void	reopen_semaphores(t_process *pdata)
 	pdata->global_sem = sem_open(GLOBAL_SEM_NAME, 0);
 }
 
-static void	exit_if_dead(t_philosopher *philo)
+static bool	is_dead(t_philosopher *philo)
 {
 	update_time(&philo->meal_time);
 	sem_wait(philo->pdata->global_sem);
 	if (philo->meal_time.time >= philo->pdata->args.time_to_die)
 	{
+		philo->pdata->exit_status = EXIT_FAILURE;
 		philo->state = E_STATE_DIED;
+		sem_post(philo->pdata->global_sem);
+		sem_wait(philo->pdata->print_sem);
 		print_state(philo);
-		cleanup_semaphores(philo->pdata);
-		exit(EXIT_FAILURE);
+		return (true);
 	}
 	sem_post(philo->pdata->global_sem);
+	return (false);
 }
 
 static bool	can_exit(t_process *pdata)
@@ -57,11 +59,8 @@ static void	*monitor_routine(void *philosopher)
 	t_philosopher	*philo;
 
 	philo = philosopher;
-	while (!can_exit(philo->pdata))
-	{
-		exit_if_dead(philo);
+	while (!is_dead(philo))
 		usleep(1000);
-	}
 	return (NULL);
 }
 
@@ -98,5 +97,6 @@ void	philosopher_routine(t_philosopher *philo)
 	while (!can_exit(philo->pdata) && !is_done_eating(philo))
 		check_update_state(philo);
 	pthread_join(monitor_thread, NULL);
+	cleanup_semaphores(philo->pdata);
 	exit(philo->pdata->exit_status);
 }
