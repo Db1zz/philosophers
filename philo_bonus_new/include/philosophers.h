@@ -6,21 +6,21 @@
 /*   By: gonische <gonische@student.42wolfsburg.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/31 14:09:58 by gonische          #+#    #+#             */
-/*   Updated: 2024/10/31 16:29:10 by gonische         ###   ########.fr       */
+/*   Updated: 2024/11/01 15:33:58 by gonische         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef PHILOSOPHERS_H
 # define PHILOSOPHERS_H
 
-#include "time.h"
+# include "time.h"
 
-#include <stdlib.h>
-#include <stdio.h>
-#include <stdbool.h>
-#include <semaphore.h>
-#include <pthread.h>
-#include <fcntl.h>
+# include <stdlib.h>
+# include <stdio.h>
+# include <stdbool.h>
+# include <semaphore.h>
+# include <pthread.h>
+# include <fcntl.h>
 
 # ifndef __USE_POSIX
 #  define __USE_POSIX 0
@@ -32,7 +32,8 @@
 # define MAX_ARGS_AMOUNT 6
 
 # define FORK_SEM_NAME "_PHILO_FORK_SEM_"
-# define GLOBLA_SEM_NAME "_PHILO_GLOBAL_SEM_"
+# define GLOBAL_SEM_NAME "_PHILO_GLOBAL_SEM_"
+# define PRINT_SEM_NAME "_PHILO_PRINT_SEM_"
 
 typedef enum e_state
 {
@@ -60,8 +61,7 @@ typedef struct t_process
 	sem_t	*global_sem;
 	sem_t	*exit_sem;
 	sem_t	*fork_sem;
-	pid_t	pid[MAX_ARR_SIZE];
-	
+	pid_t	pids[MAX_ARR_SIZE];
 }	t_process;
 
 typedef struct t_philosopher
@@ -87,16 +87,25 @@ int64_t	get_time(void);
 void	ft_sleep(int64_t ms);
 
 // Utility functions
-int	ft_atoi(const char *str);
+int		ft_atoi(const char *str);
 
 // Semaphores
 bool	open_semaphore(sem_t **sem, char *sem_name, int sem_size);
-void	destroy_semaphore(sem_t *sem, char *name);
+void	close_semaphore(sem_t *sem);
 bool	open_semaphores(t_process *pdata);
 void	cleanup_semaphores(t_process *pdata);
 void	unlink_semaphores(void);
 
 // Philosophers function
-void	init_philosopher(t_philosopher *philo, t_process *pdata);
+void	run_philosophers(t_process *pdata);
+void	philosopher_routine(t_philosopher *philo);
+
+// Forks
+void	take_forks(t_philosopher *philo);
+void	put_forks(t_philosopher *philo);
+
+// States
+void	check_update_state(t_philosopher *philo);
+void	print_state(t_philosopher *philo);
 
 #endif	// PHILOSOPHERS_H

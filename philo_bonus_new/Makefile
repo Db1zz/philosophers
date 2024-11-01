@@ -1,10 +1,15 @@
 # Project settings
 NAME = philo_bonus
 CC = cc
-CFLAGS = -Wall -Wextra -Werror
+CFLAGS = -Wall -Wextra #-Werror
 INCLUDE = -I include
 
 SRCS =	src/main.c	\
+		src/fork.c	\
+		src/philosophers.c	\
+		src/routine.c		\
+		src/semaphore.c		\
+		src/states.c		\
 		src/input_parcer.c	\
 		src/time.c			\
 		src/utils.c			\

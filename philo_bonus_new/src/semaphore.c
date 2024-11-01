@@ -6,7 +6,7 @@
 /*   By: gonische <gonische@student.42wolfsburg.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/31 14:26:21 by gonische          #+#    #+#             */
-/*   Updated: 2024/10/31 15:13:48 by gonische         ###   ########.fr       */
+/*   Updated: 2024/11/01 15:01:04 by gonische         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,25 +35,24 @@ bool	open_semaphore(sem_t **sem, char *sem_name, int sem_size)
 	return (true);
 }
 
-void	destroy_semaphore(sem_t *sem, char *name)
+void	close_semaphore(sem_t *sem)
 {
 	const char	*msg_err_issuer = "close_semaphore Error:";
 
 	if (sem_close(sem))
 		printf("%s sem_close failed\n", msg_err_issuer);
-	if (sem_unlink(name))
-		printf("%s sem_unlink failed\n", msg_err_issuer);
 }
 
 bool	open_semaphores(t_process *pdata)
 {
 	const size_t	fork_sem_size = pdata->args.number_of_philosophers;
 
-	if (!open_semaphore(pdata->fork_sem, FORK_SEM_NAME, fork_sem_size))
+	if (!open_semaphore(&pdata->fork_sem, FORK_SEM_NAME, fork_sem_size))
 		return (false);
-	if (!open_semaphore(pdata->global_sem, GLOBLA_SEM_NAME, 1))
+	if (!open_semaphore(&pdata->global_sem, GLOBAL_SEM_NAME, 1))
 	{
 		cleanup_semaphores(pdata);
+		unlink_semaphores();
 		return (false);
 	}
 	return (true);
@@ -62,13 +61,13 @@ bool	open_semaphores(t_process *pdata)
 void	cleanup_semaphores(t_process *pdata)
 {
 	if (pdata->fork_sem)
-		destroy_semaphore(pdata->fork_sem, FORK_SEM_NAME);
+		close_semaphore(pdata->fork_sem);
 	if (pdata->global_sem)
-		destroy_semaphore(pdata->global_sem, GLOBLA_SEM_NAME);
+		close_semaphore(pdata->global_sem);
 }
 
 void	unlink_semaphores(void)
 {
 	sem_unlink(FORK_SEM_NAME);
-	sem_unlink(GLOBLA_SEM_NAME);
+	sem_unlink(GLOBAL_SEM_NAME);
 }
