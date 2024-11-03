@@ -6,7 +6,7 @@
 /*   By: gonische <gonische@student.42wolfsburg.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/01 13:00:24 by gonische          #+#    #+#             */
-/*   Updated: 2024/11/02 00:13:06 by gonische         ###   ########.fr       */
+/*   Updated: 2024/11/03 02:30:17 by gonische         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,6 +48,13 @@ void	check_update_state(t_philosopher *philo)
 		state_sleeping
 	};
 
+	sem_wait(philo->pdata->global_sem);
+	if (philo->state == E_STATE_DIED)
+	{
+		sem_post(philo->pdata->global_sem);
+		return ;
+	}
+	sem_post(philo->pdata->global_sem);
 	sem_wait(philo->pdata->print_sem);
 	print_state(philo);
 	sem_post(philo->pdata->print_sem);
@@ -69,6 +76,4 @@ void	print_state(t_philosopher *philo)
 		printf("%lu %zu is sleeping\n", t, philo->id);
 	else if (philo->state == E_STATE_THINKING)
 		printf("%lu %zu is thinking\n", t, philo->id);
-	if (philo->state == E_STATE_DIED)
-		printf("%lu %zu died\n", t, philo->id);
 }
