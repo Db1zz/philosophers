@@ -6,7 +6,7 @@
 /*   By: gonische <gonische@student.42wolfsburg.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/31 14:23:27 by gonische          #+#    #+#             */
-/*   Updated: 2024/11/01 15:34:51 by gonische         ###   ########.fr       */
+/*   Updated: 2024/11/04 12:00:23 by gonische         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,8 @@ static void	init_philosopher(t_philosopher *philo, t_process *pdata)
 	philo->meal_counter = 0;
 	if (pdata->args.arguments_given == MAX_ARGS_AMOUNT)
 		philo->is_meals_counter_needed = true;
+	else
+		philo->is_meals_counter_needed = false;
 	init_time(&philo->timestamp);
 	init_time(&philo->meal_time);
 }

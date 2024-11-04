@@ -6,40 +6,24 @@
 /*   By: gonische <gonische@student.42wolfsburg.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/31 23:34:53 by gonische          #+#    #+#             */
-/*   Updated: 2024/11/03 02:29:28 by gonische         ###   ########.fr       */
+/*   Updated: 2024/11/04 12:35:41 by gonische         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philosophers.h"
 
-/*
-	The reason why we need to reopen semaphores
-	is because fork() will not copy semaphore fds
-	for child process.
-*/
-static void	reopen_semaphores(t_process *pdata)
-{
-	sem_close(pdata->fork_sem);
-	sem_close(pdata->global_sem);
-	sem_close(pdata->print_sem);
-	pdata->fork_sem = sem_open(FORK_SEM_NAME, 0);
-	pdata->global_sem = sem_open(GLOBAL_SEM_NAME, 0);
-	pdata->print_sem = sem_open(PRINT_SEM_NAME, 0);
-}
-
 static bool	is_dead(t_philosopher *philo)
 {
-	update_time(&philo->meal_time);
-	update_time(&philo->timestamp);
 	sem_wait(philo->pdata->global_sem);
+	update_time(&philo->meal_time);
 	if (philo->meal_time.time >= philo->pdata->args.time_to_die)
 	{
+		update_time(&philo->timestamp);
 		philo->pdata->exit_status = EXIT_FAILURE;
 		philo->state = E_STATE_DIED;
 		sem_post(philo->pdata->global_sem);
 		sem_wait(philo->pdata->print_sem);
 		printf("%lu %zu died\n", philo->timestamp.time, philo->id);
-		print_state(philo);
 		return (true);
 	}
 	sem_post(philo->pdata->global_sem);
@@ -63,7 +47,7 @@ static void	*monitor_routine(void *philosopher)
 	t_philosopher	*philo;
 
 	philo = philosopher;
-	while (!is_dead(philo))
+	while (!is_dead(philo) && !can_exit(philo->pdata))
 		usleep(1000);
 	return (NULL);
 }
@@ -97,6 +81,11 @@ void	philosopher_routine(t_philosopher *philo)
 	{
 		printf("Error: cannot create monitor_thread\n");
 		exit(EXIT_FAILURE);
+	}
+	if (philo->pdata->args.number_of_philosophers == 1)
+	{
+		pthread_join(monitor_thread, NULL);
+		exit(philo->pdata->exit_status);
 	}
 	while (!can_exit(philo->pdata) && !is_done_eating(philo))
 		check_update_state(philo);

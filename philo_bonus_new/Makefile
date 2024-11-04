@@ -1,7 +1,7 @@
 # Project settings
 NAME = philo_bonus
 CC = cc
-CFLAGS = -Wall -Wextra #-Werror
+CFLAGS = -Wall -Wextra -Werror
 INCLUDE = -I include
 
 SRCS =	src/main.c	\

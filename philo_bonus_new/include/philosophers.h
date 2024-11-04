@@ -6,7 +6,7 @@
 /*   By: gonische <gonische@student.42wolfsburg.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/31 14:09:58 by gonische          #+#    #+#             */
-/*   Updated: 2024/11/01 23:30:20 by gonische         ###   ########.fr       */
+/*   Updated: 2024/11/04 11:57:13 by gonische         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@
 # include <semaphore.h>
 # include <pthread.h>
 # include <fcntl.h>
+# include <sys/wait.h>
 
 # ifndef __USE_POSIX
 #  define __USE_POSIX 0
@@ -88,6 +89,7 @@ void	ft_sleep(int64_t ms);
 
 // Utility functions
 int		ft_atoi(const char *str);
+void	reopen_semaphores(t_process *pdata);
 
 // Semaphores
 bool	open_semaphore(sem_t **sem, char *sem_name, int sem_size);

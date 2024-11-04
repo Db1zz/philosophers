@@ -6,7 +6,7 @@
 /*   By: gonische <gonische@student.42wolfsburg.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/01 13:00:38 by gonische          #+#    #+#             */
-/*   Updated: 2024/11/01 13:04:43 by gonische         ###   ########.fr       */
+/*   Updated: 2024/11/04 12:32:57 by gonische         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,9 +14,9 @@
 
 void	take_forks(t_philosopher *philo)
 {
-	sem_wait(philo->pdata->fork_sem);
 	if (philo->pdata->args.number_of_philosophers % 2)
-		usleep(100);
+		ft_sleep(1);
+	sem_wait(philo->pdata->fork_sem);
 	sem_wait(philo->pdata->fork_sem);
 }
 
