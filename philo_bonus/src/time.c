@@ -6,7 +6,7 @@
 /*   By: gonische <gonische@student.42wolfsburg.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/19 23:20:18 by gonische          #+#    #+#             */
-/*   Updated: 2024/10/29 13:28:10 by gonische         ###   ########.fr       */
+/*   Updated: 2024/11/01 23:06:28 by gonische         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,4 +39,13 @@ void	update_time(t_time *time)
 	time->diff = time_curr - time->pervious;
 	time->time += time->diff;
 	time->pervious = time_curr;
+}
+
+void	ft_sleep(int64_t ms)
+{
+	int64_t	start;
+
+	start = get_time();
+	while ((get_time() - start) < ms)
+		usleep(ms);
 }

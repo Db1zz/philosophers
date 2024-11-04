@@ -1,31 +1,37 @@
 # Project settings
 NAME = philo_bonus
 CC = cc
-FLAGS = -g -Wall -Wextra #-Werror
+CFLAGS = -Wall -Wextra -Werror
 INCLUDE = -I include
 
-SRCS =	src/philosophers.c	\
-		src/input_handler.c	\
-		src/fork.c			\
+SRCS =	src/main.c	\
+		src/fork.c	\
+		src/philosophers.c	\
+		src/routine.c		\
 		src/semaphore.c		\
-		src/monitor.c		\
-		src/utils.c			\
 		src/states.c		\
+		src/input_parcer.c	\
 		src/time.c			\
-		src/main.c
+		src/utils.c			\
 
-OBJS = $(SRCS:.c=.o)
+SRC_DIR = src
+
+OBJS = $(SRCS:src/%.c=objs/%.o)
+OBJS_DIR = objs
 
 all: $(NAME)
 
-$(NAME): $(SRCS)
-	$(CC) $(FLAGS) $(SRCS) $(INCLUDE) -o $(NAME)
+$(OBJS_DIR)/%.o: $(SRC_DIR)/%.c
+	@mkdir -p $(OBJS_DIR)
+	$(CC) $(CFLAGS) $(INCLUDE) -c $< -o $@
 
-# %.o: %.c
-# 	$(CC) $(CFLAGS) $(INCLUDE) -c $< -o $@
+$(NAME): $(OBJS)
+	$(CC) $(FLAGS) $(OBJS) $(INCLUDE) -o $(NAME)
 
 clean:
 	rm -f $(OBJS)
+	rm -rf $(OBJS_DIR)
+
 fclean: clean
 	rm -f $(NAME)
 

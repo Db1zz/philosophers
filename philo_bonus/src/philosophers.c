@@ -5,76 +5,83 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: gonische <gonische@student.42wolfsburg.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/10/10 15:49:26 by gonische          #+#    #+#             */
-/*   Updated: 2024/10/21 12:50:29 by gonische         ###   ########.fr       */
-/*                                                                           */
+/*   Created: 2024/10/31 14:23:27 by gonische          #+#    #+#             */
+/*   Updated: 2024/11/04 12:00:23 by gonische         ###   ########.fr       */
+/*                                                                            */
 /* ************************************************************************** */
 
 #include "philosophers.h"
 
-static bool	check_exit_status(t_philosopher *philo)
+static void	init_philosopher(t_philosopher *philo, t_process *pdata)
 {
-	bool	status;
-
-	status = false;
-	sem_wait(philo->pdata->global_sem);
-	if (philo->pdata->exit_status > -1)
-		status = true;
-	sem_post(philo->pdata->global_sem);
-	return (status);
+	philo->id = 0;
+	philo->pdata = pdata;
+	philo->state = E_STATE_THINKING;
+	philo->meal_counter = 0;
+	if (pdata->args.arguments_given == MAX_ARGS_AMOUNT)
+		philo->is_meals_counter_needed = true;
+	else
+		philo->is_meals_counter_needed = false;
+	init_time(&philo->timestamp);
+	init_time(&philo->meal_time);
 }
 
-void	init_philosopher(t_philosopher philos[], size_t size,
-			t_process *data, sem_t *fork_sem)
+static int	create_philosophers(t_philosopher *philo)
 {
-	size_t	i;
+	int			i;
+	t_process	*pdata;
 
 	i = 0;
-	while (i < size)
+	pdata = philo->pdata;
+	while (i < pdata->args.number_of_philosophers)
 	{
-		philos[i].id = i + 1;
-		philos[i].state = E_STATE_THINKING;
-		philos[i].meal_counter = 0;
-		philos[i].pdata = data;
-		philos[i].fork_sem = fork_sem;
-		init_time(&philos[i].meal_time);
-		init_time(&philos[i].timestamp);
+		philo->id = i + 1;
+		pdata->pids[i] = fork();
+		if (pdata->pids[i] == 0)
+			return (0);
+		i++;
+	}
+	return (1);
+}
+
+static void	kill_processes(t_process *pdata)
+{
+	int	i;
+
+	i = 0;
+	while (i < pdata->args.number_of_philosophers)
+	{
+		kill(pdata->pids[i], SIGKILL);
 		i++;
 	}
 }
 
-void	philosopher_routine(t_philosopher *philo)
+static void	wait_philosophers_to_finish(t_process *pdata)
 {
-	pthread_t	thread;
+	int	status;
+	int	i;
 
-	if (pthread_create(&thread, NULL, monitor_routine, philo))
+	i = 0;
+	while (i < pdata->args.number_of_philosophers)
 	{
-		printf("Error: cannot create monitor thread\n");
-		exit(EXIT_FAILURE);
+		waitpid(-1, &status, 0);
+		status = WEXITSTATUS(status);
+		if (status == EXIT_FAILURE)
+		{
+			kill_processes(pdata);
+			return ;
+		}
+		i++;
 	}
-	pthread_detach(thread);
-	while (!check_exit_status(philo))
-		check_update_state(philo);
 }
 
-/*
-	Since the child process doesn't inherit descriptors from the parent,
-	we have to reopen each semaphore.
-*/
-void	philosopher_reopen_semaphores(t_philosopher *philo)
+void	run_philosophers(t_process *pdata)
 {
-	sem_close(philo->fork_sem);
-	sem_close(philo->pdata->global_sem);
-	philo->fork_sem = sem_open(FORK_SEM_NAME, 0);
-	philo->pdata->global_sem = sem_open(GLOBLA_SEM_NAME, 0);
-}
+	t_philosopher	philo;
 
-/*
-	равлик)
-*/
-void	philosopher_exit_routine(t_philosopher *philo)
-{
-	sem_close(philo->fork_sem);
-	sem_close(philo->pdata->global_sem);
-	exit(philo->pdata->exit_status);
+	init_philosopher(&philo, pdata);
+	if (create_philosophers(&philo) == 0)
+		philosopher_routine(&philo);
+	else
+		wait_philosophers_to_finish(pdata);
 }

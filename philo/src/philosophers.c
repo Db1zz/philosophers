@@ -58,12 +58,14 @@ bool	create_philosophers(t_philosopher philos[], t_fork forks[],
 		philos[i].state = E_STATE_THINKING;
 		philos[i].meal_counter = 0;
 		philos[i].pdata = data;
-		if (pthread_create(&philos[i].thread, NULL,
-				philosopher_routine, &philos[i]))
-		{
-			printf("Error: pthread_create failed\n");
-			return (false);
-		}
+		init_time(&philos[i].timestamp);
+		i++;
+	}
+	i = 0;
+	while (i < size)
+	{
+		pthread_create(&philos[i].thread, NULL,
+			philosopher_routine, &philos[i]);
 		i++;
 	}
 	return (true);
@@ -78,7 +80,6 @@ void	*philosopher_routine(void *philosopher)
 	t_philosopher	*philo;
 
 	philo = (t_philosopher *)philosopher;
-	init_time(&philo->timestamp);
 	init_time(&philo->meal_time);
 	while (!check_exit_status(philo) && !is_philo_done_eating(philo))
 	{

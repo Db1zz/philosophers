@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: gonische <gonische@student.42wolfsburg.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/10/13 15:17:40 by gonische          #+#    #+#             */
-/*   Updated: 2024/10/30 16:30:03 by gonische         ###   ########.fr       */
+/*   Created: 2024/10/31 14:09:58 by gonische          #+#    #+#             */
+/*   Updated: 2024/11/04 11:57:13 by gonische         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,16 +15,12 @@
 
 # include "time.h"
 
+# include <stdlib.h>
 # include <stdio.h>
 # include <stdbool.h>
-# include <stdlib.h>
-# include <sys/time.h>
-# include <pthread.h>
-# include <unistd.h>
 # include <semaphore.h>
+# include <pthread.h>
 # include <fcntl.h>
-# include <sys/stat.h>
-# include <unistd.h>
 # include <sys/wait.h>
 
 # ifndef __USE_POSIX
@@ -37,7 +33,8 @@
 # define MAX_ARGS_AMOUNT 6
 
 # define FORK_SEM_NAME "_PHILO_FORK_SEM_"
-# define GLOBLA_SEM_NAME "_PHILO_GLOBAL_SEM_"
+# define GLOBAL_SEM_NAME "_PHILO_GLOBAL_SEM_"
+# define PRINT_SEM_NAME "_PHILO_PRINT_SEM_"
 
 typedef enum e_state
 {
@@ -63,15 +60,17 @@ typedef struct t_process
 	t_args	args;
 	int		exit_status;
 	sem_t	*global_sem;
-	pid_t	pid[MAX_ARR_SIZE];
+	sem_t	*print_sem;
+	sem_t	*fork_sem;
+	pid_t	pids[MAX_ARR_SIZE];
 }	t_process;
 
 typedef struct t_philosopher
 {
 	size_t		id;
-	sem_t		*fork_sem;
 	t_state		state;
 	int			meal_counter;
+	bool		is_meals_counter_needed;
 	t_time		meal_time;
 	t_time		timestamp;
 	t_process	*pdata;
@@ -79,40 +78,36 @@ typedef struct t_philosopher
 
 typedef void	(*t_state_function_p)(t_philosopher *);
 
-// Input handlers
-bool	check_arguments(const t_args *args);
-bool	init_args(int argc, char **argv, t_args *args);
+// Args pareser
+bool	parse_args(int argc, char **argv, t_args *args);
 
-// Semaphore wrappers
-bool	init_semaphore(sem_t **sem, char *sem_name, int sem_size);
-void	destroy_semaphore(sem_t *sem, char *name);
-void	cleanup_semaphores(sem_t *fork_sem, sem_t *global_sem);
-bool	init_semaphores(sem_t **fork_sem, size_t fork_sem_size,
-			sem_t **global_sem);
+// Timer functions
+void	init_time(t_time *time);
+void	update_time(t_time *time);
+int64_t	get_time(void);
+void	ft_sleep(int64_t ms);
+
+// Utility functions
+int		ft_atoi(const char *str);
+void	reopen_semaphores(t_process *pdata);
+
+// Semaphores
+bool	open_semaphore(sem_t **sem, char *sem_name, int sem_size);
+void	close_semaphore(sem_t *sem);
+bool	open_semaphores(t_process *pdata);
+void	cleanup_semaphores(t_process *pdata);
 void	unlink_semaphores(void);
+
+// Philosophers function
+void	run_philosophers(t_process *pdata);
+void	philosopher_routine(t_philosopher *philo);
 
 // Forks
 void	take_forks(t_philosopher *philo);
 void	put_forks(t_philosopher *philo);
 
-// Philosopher monitor
-void	*monitor_routine(void *philosopher);
-
-// Philosopher functions
-void	init_philosopher(t_philosopher philos[], size_t size,
-			t_process *data, sem_t *fork_sem);
-void	philosopher_routine(t_philosopher *philo);
-void	philosopher_reopen_semaphores(t_philosopher *philo);
-void	philosopher_exit_routine(t_philosopher *philo);
-
-// State related functions
-void	print_state(t_philosopher *philo);
+// States
 void	check_update_state(t_philosopher *philo);
-void	state_thinking(t_philosopher *philo);
-void	state_eating(t_philosopher *philo);
-void	state_sleeping(t_philosopher *philo);
+void	print_state(t_philosopher *philo);
 
-// Utility functions
-int		ft_atoi(const char *str);
-void	ft_sleep(int64_t ms);
-#endif // PHILOSOPHERS_H
+#endif	// PHILOSOPHERS_H
